@@ -1,0 +1,24 @@
+[bootstrap]
+main_collection = /main/main.collectionc
+
+[script]
+shared_state = 1
+
+[display]
+width = 320
+height = 288
+update_frequency = 60
+
+[android]
+input_method = HiddenInputField
+
+[project]
+title = tsd-template-yagames
+dependencies#0 = https://github.com/ts-defold/defold-lldebugger/archive/extension.zip
+dependencies#1 = https://github.com/indiesoftby/defold-yagames/archive/refs/heads/master.zip
+
+[render]
+clear_color_red = 0.79
+clear_color_green = 0.86
+clear_color_blue = 0.62
+
