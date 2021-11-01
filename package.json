@@ -13,7 +13,7 @@
     "node": ">=12.13.0"
   },
   "scripts": {
-    "postinstall": "patch-package && resolve",
+    "postinstall": "patch-package && npm run resolve",
     "resolve": "library resolve",
     "clean": "tstl --clean",
     "build": "tstl",
