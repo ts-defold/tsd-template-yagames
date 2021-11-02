@@ -27,8 +27,8 @@ jobs:
     - name: Install Dependencies
       run: npm install
       
-    - name: Genrate lua w/ ts-defold
+    - name: Generate lua w/ ts-defold
       run: npm run build
 
     - name: Build
-      run: java -jar bob.jar --root ./app --archive --platform js-web --verbose resolve distclean build bundle
+      run: java -jar bob.jar --root ./app --archive --platform js-web --bundle-output ../bundle --verbose resolve distclean build bundle
