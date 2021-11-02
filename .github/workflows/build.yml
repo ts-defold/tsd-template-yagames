@@ -20,6 +20,9 @@ jobs:
       uses: actions/setup-java@v1
       with:
         java-version: 11.0.x
+
+    - name: Setup Defold
+      uses: dapetcu21/setup-defold@v3.0.2
       
     - name: Install Dependencies
       run: npm install
@@ -28,7 +31,6 @@ jobs:
       run: npm run build
 
     - name: Build
-      uses: dapetcu21/setup-defold@v3.0.2
       run: 'java -jar $BOB --root ./app --archive --platform js-web --bundle-output ./bundle --verbose resolve distclean build bundle'
       
     - name: Deploy
