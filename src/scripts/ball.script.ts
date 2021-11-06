@@ -54,25 +54,30 @@ export function update(this: props, dt: number): void {
   this.dir.x = left ? -1 : right ? 1 : 0;
   this.dir.y = down ? -1 : up ? 1 : 0;
 
-  pos = pos + this.dir * this.speed * dt as vmath.vector3;
+  pos = (pos + this.dir * this.speed * dt) as vmath.vector3;
   if (pos.x < 12) pos.x = 12;
   if (pos.x > this.bounds.x - 12) pos.x = this.bounds.x - 12;
   if (pos.y > this.bounds.y - 12) pos.y = this.bounds.y - 12;
-  go.set_position(pos);
+  if (this.lives > 0) go.set_position(pos);
 
-  if (pos.y < -18 && this.respawn_timer <= 0) {
+  if (pos.y < -18 && this.respawn_timer == 0) {
     this.lives -= 1;
-    this.respawn_timer = RESPAWN_TIME;
-    go.set_position(vmath.vector3(160, 24, 0));
     msg.post("/gui#hud", "lives", { lives: this.lives });
+
+    if (this.lives > 0) {
+      this.respawn_timer = RESPAWN_TIME;
+      go.set_position(vmath.vector3(160, 24, 0));
+    } else {
+      this.respawn_timer = math.huge;
+      msg.post("main:/main#script", "show_scores");
+    }
   }
 
   if (this.respawn_timer > 0) {
     this.respawn_timer -= dt;
     const alpha = go.get("/ball#sprite", "tint.w") as number;
     go.set("/ball#sprite", "tint.w", alpha === 0 ? 1 : 0);
-  }
-  else if (this.respawn_timer < 0) {
+  } else if (this.respawn_timer < 0) {
     go.set("/ball#sprite", "tint.w", 1);
     this.respawn_timer = 0;
   }
@@ -97,9 +102,13 @@ export function on_input(this: props, action_id: hash, action: Action): void {
 export function on_message(
   this: props,
   message_id: hash,
-  message: Message,
+  message: Message
 ): void {
-  if (message_id === hash("contact_point_response") && message.group == hash("wall") && this.respawn_timer <= 0) {
+  if (
+    message_id === hash("contact_point_response") &&
+    message.group == hash("wall") &&
+    this.respawn_timer <= 0
+  ) {
     if (message.distance > 0) {
       const proj = vmath.project(
         this.correction,
@@ -112,8 +121,10 @@ export function on_message(
         this.correction = (this.correction + comp) as vmath.vector3;
       }
     }
-  }
-  else if (message_id === hash("trigger_response") && this.respawn_timer <= 0) {
+  } else if (
+    message_id === hash("trigger_response") &&
+    this.respawn_timer <= 0
+  ) {
     msg.post("/walls#script", "trigger_response", message);
   }
 }

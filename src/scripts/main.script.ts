@@ -5,8 +5,12 @@ import * as lldebugger from "lldebugger.debug";
 lldebugger.start();
 
 interface props {
-  initialized: boolean;
+  loaded?: hash;
 }
+
+const GAME = "/game#proxy";
+const TITLE = "/title#proxy";
+const SCORES = "/highscores#proxy";
 
 export function init(this: props): void {
   yagames.init((_ctx, err) => {
@@ -22,22 +26,34 @@ export function init(this: props): void {
       print("Leaderboards initialized");
     });
 
-    this.initialized = true;
+    msg.post(TITLE, "load");
   });
 }
 
 export function on_message(
   this: props,
   message_id: hash,
-  message: unknown,
+  _message: unknown,
+  sender: hash,
 ): void {
-  if (message_id === hash("highscore")) {
-    const { score } = message as { score: number };
-    yagames.leaderboards_set_score("highscore", score, "", (_ctx, err) => {
-      if (err != undefined) {
-        print("Something went wrong", err);
-        return;
-      }
-    });
+  if (message_id === hash("start_game")) {
+    print("Starting game");
+    msg.post(GAME, "load");
+  }
+  else if (message_id === hash("show_title")) {
+    print("Show title");
+    msg.post(TITLE, "load");
+  }
+  else if (message_id === hash("show_scores")) {
+    print("Show scores");
+    msg.post(SCORES, "load");
+  }
+  else if (message_id == hash("proxy_loaded")) {
+    if (this.loaded) msg.post(this.loaded, "unload");
+    
+    this.loaded = sender;
+    msg.post(sender, "acquire_input_focus");
+    msg.post(sender, "init");
+    msg.post(sender, "enable");
   }
 }
