@@ -101,10 +101,10 @@ instances {
 }
 scale_along_z: 0
 embedded_instances {
-  id: "main"
+  id: "game"
   data: "components {\n"
   "  id: \"main\"\n"
-  "  component: \"/scripts/main.script\"\n"
+  "  component: \"/scripts/game.script\"\n"
   "  position {\n"
   "    x: 0.0\n"
   "    y: 0.0\n"
