@@ -36,3 +36,4 @@ app/build
 *.pyc
 app/builtins
 dmengine*
+bundle/
