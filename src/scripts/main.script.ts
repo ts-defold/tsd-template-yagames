@@ -18,12 +18,21 @@ export function init(this: props): void {
       print("Error initializing yagames:", err);
       return;
     }
-    yagames.leaderboards_init((_ctx, err) => {
+
+    //* YaGames Authenticate
+    yagames.auth_open_auth_dialog((_ctx, err) => {
       if (err != undefined) {
-        print("Error initializing leaderboards:", err);
-        return;
+        print("Error opening auth dialog:", err);
       }
-      print("Leaderboards initialized");
+
+      //* YaGames Initialize Leaderboards
+      yagames.leaderboards_init((_ctx, err) => {
+        if (err != undefined) {
+          print("Error initializing leaderboards:", err);
+          return;
+        }
+        print("Leaderboards initialized");
+      });
     });
 
     msg.post(TITLE, "load");

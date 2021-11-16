@@ -31,6 +31,8 @@ export function on_input(this: props, action_id: hash, action: Action): void {
   } else if (action_id == hash("down") && action.pressed) {
     this.index = (this.index + 1) % this.menu.length;
   } else if (action_id == hash("start") && action.pressed) {
+    msg.post("main:/main#script", "start_game");
+  } else if (action_id == hash("accept") && action.pressed) {
     switch (this.index) {
       case MenuActions.Start:
         msg.post("main:/main#script", "start_game");

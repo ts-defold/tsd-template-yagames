@@ -18,6 +18,14 @@ key_trigger {
   input: KEY_DOWN
   action: "down"
 }
+key_trigger {
+  input: KEY_Z
+  action: "accept"
+}
+key_trigger {
+  input: KEY_X
+  action: "back"
+}
 gamepad_trigger {
   input: GAMEPAD_LPAD_LEFT
   action: "left"
@@ -32,11 +40,11 @@ gamepad_trigger {
 }
 gamepad_trigger {
   input: GAMEPAD_RPAD_DOWN
-  action: "start"
+  action: "accept"
 }
 gamepad_trigger {
   input: GAMEPAD_RPAD_RIGHT
-  action: "start"
+  action: "back"
 }
 gamepad_trigger {
   input: GAMEPAD_LPAD_UP
