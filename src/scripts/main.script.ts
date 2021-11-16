@@ -42,7 +42,7 @@ export function init(this: props): void {
 export function on_message(
   this: props,
   message_id: hash,
-  _message: unknown,
+  message: unknown,
   sender: hash,
 ): void {
   if (message_id === hash("start_game")) {
@@ -56,6 +56,15 @@ export function on_message(
   else if (message_id === hash("show_scores")) {
     print("Show scores");
     msg.post(SCORES, "load");
+  }
+  else if (message_id == hash("show_fullscreen_adv")) {
+    const { then } = message as { then: string };
+    yagames.adv_show_fullscreen_adv({
+      open: () => print("Show Ad"),
+      close: () => msg.post("main:/main#script", then),
+      offline: () => msg.post("main:/main#script", then),
+      error: () => msg.post("main:/main#script", then),
+    });
   }
   else if (message_id == hash("proxy_loaded")) {
     if (this.loaded) msg.post(this.loaded, "unload");

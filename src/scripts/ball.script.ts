@@ -69,7 +69,7 @@ export function update(this: props, dt: number): void {
       go.set_position(vmath.vector3(160, 24, 0));
     } else {
       this.respawn_timer = math.huge;
-      msg.post("main:/main#script", "show_scores");
+      msg.post("main:/main#script", "show_fullscreen_adv", { then: "show_scores" });
     }
   }
 
