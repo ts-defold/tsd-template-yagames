@@ -5,6 +5,7 @@ import * as lldebugger from "lldebugger.debug";
 lldebugger.start();
 
 interface props {
+  next?: string;
   loaded?: hash;
   params?: { 
     target?: string;
@@ -45,6 +46,13 @@ export function init(this: props): void {
   });
 }
 
+export function update(this: props): void {
+  if (this.next !== undefined) {
+    msg.post(this.next, "load");
+    this.next = undefined;
+  }
+}
+
 export function on_message(
   this: props,
   message_id: hash,
@@ -52,21 +60,17 @@ export function on_message(
   sender: hash,
 ): void {
   if (message_id === hash("start_game")) {
-    print("Starting game");
-    msg.post(GAME, "load");
+    this.next = GAME;
   }
   else if (message_id === hash("show_title")) {
-    print("Show title");
-    msg.post(TITLE, "load");
+    this.next = TITLE;
   }
   else if (message_id === hash("show_score")) {
+    this.next = SCORE;
     this.params = message as { target?: string; id?: string; params?: unknown; };
-    print("Show score", this.params.target, this.params.id, this.params.params);
-    msg.post(SCORE, "load");
   }
   else if (message_id === hash("show_highscores")) {
-    print("Show highscores");
-    msg.post(HIGHSCORES, "load");
+    this.next = HIGHSCORES;
   }
   else if (message_id == hash("show_fullscreen_adv")) {
     const { then } = message as { then: string };
@@ -91,6 +95,7 @@ export function on_message(
     if (this.params !== undefined && this.params.target !== undefined && this.params.id !== undefined) {
       print("Forwarding params:", sender, this.params.target, this.params.id, this.params.params);
       msg.post(this.params.target, this.params.id, this.params.params);
+      this.params = undefined;
     }
   }
 }

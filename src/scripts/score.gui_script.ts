@@ -74,8 +74,6 @@ export function update(this: props): void {
 }
 
 export function on_input(this: props, action_id: hash, action: Action): void {
-  if (this.nodes === undefined) return; // HACK: Input gets fired before init?
-
   if (action_id == hash("up") && action.pressed) {
     this.letters_index = (this.letters_index + 1) % this.letters.length;
   }
@@ -90,8 +88,21 @@ export function on_input(this: props, action_id: hash, action: Action): void {
     this.initials_index = (this.initials_index + 1) % this.initials.length;
     this.letters_index = this.letters.indexOf(this.initials[this.initials_index]);
   }
-  else if (action_id == hash("accept") || action_id == hash("back") || action_id == hash("start")&& action.pressed) {
-    if (this.submit === "no") this.submit = "yes";
+  else if (action_id == hash ("back") && action.pressed) {
+    if (this.initials_index > 0) {
+      this.initials_index--;
+      this.letters_index = this.letters.indexOf(this.initials[this.initials_index]);
+    }
+  }
+  else if (action_id == hash("accept") || action_id == hash("start")&& action.pressed) {
+    if (this.initials_index < 2) {
+      this.initials[this.initials_index] = this.letters[this.letters_index];
+      this.initials_index++;
+      this.letters_index = this.letters.indexOf(this.initials[this.initials_index]);
+    }
+    else if (this.initials_index === 2) {
+      if (this.submit === "no") this.submit = "yes";
+    }
   }
 
   // Update current letter
@@ -107,8 +118,7 @@ export function on_input(this: props, action_id: hash, action: Action): void {
 }
 
 export function on_message(this: props, message_id: hash, message: unknown): void {
-  print("score gui ->", message_id, message);
-  
+
   if (message_id == hash("score")) {
     const { score } = message as { score: number };
     this.score = score;
