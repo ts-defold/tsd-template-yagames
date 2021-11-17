@@ -29,7 +29,7 @@ export function update(this: props, _dt: number): void {
   if (!this.pending && this.request) {
     this.pending = true;
     this.request = false;
-    requestLeaderboard(this, this.mode);
+    requestLeaderboard(this, this.mode === "top" ? "around" : "top");
   }
 }
 
@@ -43,7 +43,7 @@ export function on_input(this: props, action_id: hash, action: Action): void {
 }
 
 function requestLeaderboard(props: props, mode: "top" | "around"): void {
-  //! HTML5
+  //! HTML5 Only
   const info = sys.get_sys_info() as { system_name: string };
   if (info.system_name !== "HTML5") {
     updateLeaderboard(props, true);
@@ -53,10 +53,11 @@ function requestLeaderboard(props: props, mode: "top" | "around"): void {
   //* YaGames Leaderboards GetEntries
   yagames.leaderboards_get_entries("highscore", { includeUser: mode === "around", quantityTop: 5}, (_ctx, err, data) => {
     props.pending = false;
-    if (err === undefined) return;
-
+    if (err !== undefined) return;
+  
+    print("leaderboards_get_entries ->", data, data?.entries.length, data?.userRank, data?.ranges);
     props.scores = data?.entries.map(entry => ({
-      initials: entry.player.publicName.substr(0, 3) ?? "AAA",
+      initials: entry.extraData ?? "AAA",
       score: entry.score,
     })) ?? [];
     props.mode = mode;
@@ -65,6 +66,7 @@ function requestLeaderboard(props: props, mode: "top" | "around"): void {
 }
 
 function updateLeaderboard(props: props, offline = false): void {
+  print("updateLeaderboard ->", props.scores.length, props.mode, offline);
   for (let i = 0; i < 5; i++) {
     const initials_node = gui.get_node(`name-${i+1}`);
     const score_node = gui.get_node(`score-${i+1}`);

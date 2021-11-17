@@ -38,7 +38,7 @@ export function on_input(this: props, action_id: hash, action: Action): void {
         msg.post("main:/main#script", "start_game");
         break;
       case MenuActions.Scores:
-        msg.post("main:/main#script", "show_scores");
+        msg.post("main:/main#script", "show_highscores");
         break;
     }
   }

@@ -6,11 +6,17 @@ lldebugger.start();
 
 interface props {
   loaded?: hash;
+  params?: { 
+    target?: string;
+    id?: string; 
+    params?: unknown;
+  };
 }
 
-const GAME = "/game#proxy";
-const TITLE = "/title#proxy";
-const SCORES = "/highscores#proxy";
+const GAME = "main:/game#proxy";
+const TITLE = "main:/title#proxy";
+const HIGHSCORES = "main:/highscores#proxy";
+const SCORE = "main:/score#proxy";
 
 export function init(this: props): void {
   yagames.init((_ctx, err) => {
@@ -53,9 +59,14 @@ export function on_message(
     print("Show title");
     msg.post(TITLE, "load");
   }
-  else if (message_id === hash("show_scores")) {
-    print("Show scores");
-    msg.post(SCORES, "load");
+  else if (message_id === hash("show_score")) {
+    this.params = message as { target?: string; id?: string; params?: unknown; };
+    print("Show score", this.params.target, this.params.id, this.params.params);
+    msg.post(SCORE, "load");
+  }
+  else if (message_id === hash("show_highscores")) {
+    print("Show highscores");
+    msg.post(HIGHSCORES, "load");
   }
   else if (message_id == hash("show_fullscreen_adv")) {
     const { then } = message as { then: string };
@@ -70,8 +81,16 @@ export function on_message(
     if (this.loaded) msg.post(this.loaded, "unload");
     
     this.loaded = sender;
+    print("Loaded: ", sender);
+
     msg.post(sender, "acquire_input_focus");
     msg.post(sender, "init");
     msg.post(sender, "enable");
+
+    // Foreward params if any available
+    if (this.params !== undefined && this.params.target !== undefined && this.params.id !== undefined) {
+      print("Forwarding params:", sender, this.params.target, this.params.id, this.params.params);
+      msg.post(this.params.target, this.params.id, this.params.params);
+    }
   }
 }
