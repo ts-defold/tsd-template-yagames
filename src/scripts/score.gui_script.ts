@@ -1,4 +1,5 @@
 import * as yagames from "yagames.yagames";
+import offlineScores from "../modules/offline-highscores";
 
 type Action = {
   pressed: boolean;
@@ -61,6 +62,7 @@ export function update(this: props): void {
     //! HTML5 Only
     const info = sys.get_sys_info() as { system_name: string };
     if (info.system_name !== "HTML5") {
+      offlineScores.set_score(this.score, this.initials.join(""));
       msg.post("main:/main#script", "show_fullscreen_adv", { then: "show_highscores" });
       return;
     }

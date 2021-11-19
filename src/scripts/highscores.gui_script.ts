@@ -1,4 +1,5 @@
 import * as yagames from "yagames.yagames";
+import offlineScores from "../modules/offline-highscores";
 
 type Action = {
   pressed: boolean;
@@ -70,7 +71,8 @@ function updateLeaderboard(props: props, offline = false): void {
   for (let i = 0; i < 5; i++) {
     const initials_node = gui.get_node(`name-${i+1}`);
     const score_node = gui.get_node(`score-${i+1}`);
-    gui.set_text(initials_node, i < props.scores.length ? props.scores[i].initials : offline ? "AAA" : "");
-    gui.set_text(score_node, i < props.scores.length ? props.scores[i].score.toString() : offline ? ((i+1)*100).toString() : "");
+    const db = offline ? offlineScores : props;
+    gui.set_text(initials_node, i < db.scores.length ? db.scores[i].initials : "");
+    gui.set_text(score_node, i < db.scores.length ? db.scores[i].score.toString() : "");
   }
 }
