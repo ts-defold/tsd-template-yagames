@@ -14,7 +14,7 @@
 				"reveal": "always",
 				"focus": false,
 				"panel": "dedicated",
-				"clear": false
+				"clear": true
 			},
 			"label": "build",
 			"detail": "Build the project for running, debugging or testing",
@@ -33,7 +33,7 @@
 				"reveal": "always",
 				"focus": false,
 				"panel": "dedicated",
-				"clear": false
+				"clear": true
 			},
 			"label": "build & run",
 			"detail": "Build the project for running, debugging or testing",
@@ -64,7 +64,7 @@
 				"reveal": "always",
 				"focus": false,
 				"panel": "dedicated",
-				"clear": false
+				"clear": true
 			},
 			"label": "compile",
 			"detail": "tstl"
