@@ -1,0 +1,29 @@
+diff --git a/node_modules/typescript-to-lua/dist/LuaPrinter.js b/node_modules/typescript-to-lua/dist/LuaPrinter.js
+index cc752cc..3a878b3 100644
+--- a/node_modules/typescript-to-lua/dist/LuaPrinter.js
++++ b/node_modules/typescript-to-lua/dist/LuaPrinter.js
+@@ -137,7 +137,7 @@ class LuaPrinter {
+         if (luaLibImport === CompilerOptions_1.LuaLibImportKind.Always ||
+             (luaLibImport === CompilerOptions_1.LuaLibImportKind.Require && file.luaLibFeatures.size > 0)) {
+             // Require lualib bundle
+-            header += 'require("lualib_bundle");\n';
++            header += 'require("lualib_bundle")\n';
+         }
+         else if (luaLibImport === CompilerOptions_1.LuaLibImportKind.Inline && file.luaLibFeatures.size > 0) {
+             // Inline lualib features
+diff --git a/node_modules/typescript-to-lua/dist/cli/parse.js b/node_modules/typescript-to-lua/dist/cli/parse.js
+index db65898..cb2ff61 100644
+--- a/node_modules/typescript-to-lua/dist/cli/parse.js
++++ b/node_modules/typescript-to-lua/dist/cli/parse.js
+@@ -64,6 +64,11 @@ exports.optionDeclarations = [
+         description: "An array of paths that tstl should not resolve and keep as-is.",
+         type: "array",
+     },
++    {
++        name: "trimExtensions",
++        description: "Do not add .lua to the files when emitting, i.e. file.script.ts -> file.script when compiled",
++        type: "boolean",
++    },
+ ];
+ function updateParsedConfigFile(parsedConfigFile) {
+     let hasRootLevelOptions = false;

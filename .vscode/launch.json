@@ -17,8 +17,13 @@
               "program": { "command": "${workspaceFolder}/app/build/default/dmengine.exe" }
           },
           "scriptRoots": [
-              "app",
-              "src"
+            "app",
+            "src"
+          ],
+          "scriptFiles": [
+            "app/**/*.lua",
+            "app/**/*.script",
+            "app/**/*.gui_script"
           ]
       }
   ]
