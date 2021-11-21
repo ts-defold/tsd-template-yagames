@@ -275,7 +275,7 @@
   </script> 
   <!-- Touch Controls --> 
   <script type="text/javascript">
-    document.body.addEventListener('touchmove', function(event) { event.preventDefault(); }, false);
+    document.body.addEventListener('touchmove', function(ev) { ev.preventDefault(); }, false);
     var dpadTouchId = -1;
     var actionsTouchId = -1;
 
@@ -287,8 +287,8 @@
         (action === 'start' && dpadTouchId < 0) ||
         (action === 'move' && changed.filter(t => t.identifier === dpadTouchId).length)
       ) {
-        if (event.targetTouches.length > 0) {
-          var touch = event.targetTouches[0];
+        if (ev.targetTouches.length > 0) {
+          var touch = ev.targetTouches[0];
           if (action === 'start') dpadTouchId = touch.identifier;
 
           var rect = touch.target.getBoundingClientRect();
@@ -311,13 +311,13 @@
           ]
           window.VirtualInputDriver.down = window.VirtualInputDriver.down.filter(b => !['up', 'right', 'down', 'left'].includes(b));
           window.VirtualInputDriver.down = window.VirtualInputDriver.down.concat(INPUT[octant].filter(b => !window.VirtualInputDriver.down.includes(b)));
-          event.preventDefault(); ev.stopPropagation();
+          ev.preventDefault(); ev.stopPropagation();
         }
       }
       else if (action === 'end' && changed.filter(t => t.identifier === dpadTouchId).length) {
         window.VirtualInputDriver.down = window.VirtualInputDriver.down.filter(b => !['up', 'right', 'down', 'left'].includes(b));
         dpadTouchId = -1;
-        event.preventDefault(); ev.stopPropagation();
+        ev.preventDefault(); ev.stopPropagation();
       }
     }
 
@@ -329,7 +329,7 @@
         (action === 'start' && actionsTouchId < 0) ||
         (action === 'move' && changed.filter(t => t.identifier === actionsTouchId).length)
       ) {
-        var touch = event.targetTouches[0];
+        var touch = ev.targetTouches[0];
         if (action === 'start') actionsTouchId = touch.identifier;
 
         var rect = touch.target.getBoundingClientRect();
@@ -342,12 +342,12 @@
         let buttons = [ x < 0 ? 'back' : 'accept'];
         window.VirtualInputDriver.down = window.VirtualInputDriver.down.filter(b => !['accept', 'back'].includes(b));
         window.VirtualInputDriver.down = window.VirtualInputDriver.down.concat(buttons);
-        event.preventDefault(); ev.stopPropagation();
+        ev.preventDefault(); ev.stopPropagation();
       }
       else if (action === 'end' && changed.filter(t => t.identifier === actionsTouchId).length) {
         window.VirtualInputDriver.down = window.VirtualInputDriver.down.filter(b => !['accept', 'back'].includes(b));
         actionsTouchId = -1;
-        event.preventDefault(); ev.stopPropagation();
+        ev.preventDefault(); ev.stopPropagation();
       }
     }
   </script> 
