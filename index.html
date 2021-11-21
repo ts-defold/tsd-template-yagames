@@ -3,7 +3,7 @@
  <head> 
   <meta charset="UTF-8"> 
   <meta http-equiv="X-UA-Compatible" content="IE=edge"> 
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui, shrink-to-fit=no"> 
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui, shrink-to-fit=no"> 
   <meta name="apple-mobile-web-app-capable" content="yes"> 
   <title>tsd-template-yagames 1.0</title> 
   <style>
@@ -40,10 +40,6 @@
   image {
     justify-self: flex-start;
     flex-grow: 1;
-    pointer-events: none;
-  }
-
-  canvas {
     pointer-events: none;
   }
 
@@ -315,11 +311,13 @@
           ]
           window.VirtualInputDriver.down = window.VirtualInputDriver.down.filter(b => !['up', 'right', 'down', 'left'].includes(b));
           window.VirtualInputDriver.down = window.VirtualInputDriver.down.concat(INPUT[octant].filter(b => !window.VirtualInputDriver.down.includes(b)));
+          event.preventDefault(); ev.stopPropagation();
         }
       }
       else if (action === 'end' && changed.filter(t => t.identifier === dpadTouchId).length) {
         window.VirtualInputDriver.down = window.VirtualInputDriver.down.filter(b => !['up', 'right', 'down', 'left'].includes(b));
         dpadTouchId = -1;
+        event.preventDefault(); ev.stopPropagation();
       }
     }
 
@@ -335,19 +333,21 @@
         if (action === 'start') actionsTouchId = touch.identifier;
 
         var rect = touch.target.getBoundingClientRect();
-        var centerX = touch.clientX - rect.left;
-        var centerY = touch.clientY - rect.top;
+        var x = touch.clientX - rect.left;
+        var y = touch.clientY - rect.top;
+        
+        x = x - rect.width / 2;
+        y = y - rect.height / 2;
 
-        var x = x - rect.width / 2;
-        var y = y - rect.height / 2;
-
-        let buttons = [ y < 0 ? 'back' : 'accept'];
+        let buttons = [ x < 0 ? 'back' : 'accept'];
         window.VirtualInputDriver.down = window.VirtualInputDriver.down.filter(b => !['accept', 'back'].includes(b));
         window.VirtualInputDriver.down = window.VirtualInputDriver.down.concat(buttons);
+        event.preventDefault(); ev.stopPropagation();
       }
       else if (action === 'end' && changed.filter(t => t.identifier === actionsTouchId).length) {
         window.VirtualInputDriver.down = window.VirtualInputDriver.down.filter(b => !['accept', 'back'].includes(b));
         actionsTouchId = -1;
+        event.preventDefault(); ev.stopPropagation();
       }
     }
   </script> 
