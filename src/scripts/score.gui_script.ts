@@ -69,7 +69,7 @@ export function update(this: props): void {
 
     //* YaGames Leaderboards SetScore
     yagames.leaderboards_set_score("highscore", this.score, this.initials.join(""), (_ctx, err) => {
-      if (err === undefined) print("highscore set ->", this.score, this.initials.join(""));
+      if (err !== undefined) offlineScores.set_score(this.score, this.initials.join(""));
       msg.post("main:/main#script", "show_fullscreen_adv", { then: "show_highscores" });
     });
   }

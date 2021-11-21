@@ -35,10 +35,10 @@ export function update(this: props, _dt: number): void {
 }
 
 export function on_input(this: props, action_id: hash, action: Action): void {
-  if (action_id == hash("start")&& action.pressed) {
+  if ((action_id == hash("start") || action_id == hash("back")) && action.pressed) {
     msg.post("main:/main#script", "show_title");
   }
-  else if (action_id == hash("accept") || action_id == hash("back") && action.pressed) {
+  else if (action_id == hash("accept") && action.pressed) {
     this.request = true;
   }
 }
