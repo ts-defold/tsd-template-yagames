@@ -4,7 +4,7 @@ version = 1.0
 write_log = 0
 compress_archive = 1
 publisher = unnamed
-developer = unnamed
+developer = https://github.com/ts-defold/tsd-template-yagames
 
 [display]
 width = 320
@@ -142,7 +142,7 @@ localizations = en
 [html5]
 custom_heap_size = 0
 heap_size = 256
-htmlfile = /builtins/manifests/web/engine_template.html
+htmlfile = /manifests/web/template.html
 cssfile = /builtins/manifests/web/light_theme.css
 archive_location_prefix = archive
 show_fullscreen_button = 1
