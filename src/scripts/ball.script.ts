@@ -26,6 +26,8 @@ interface props {
   correction: vmath.vector3;
   bounds: vmath.vector3;
   respawn_timer: number;
+  is_HTML5: boolean;
+  use_input_debugger: boolean;
 }
 
 go.property("speed", 60);
@@ -33,6 +35,13 @@ go.property("lives", 3);
 
 export function init(this: props): void {
   msg.post(".", "acquire_input_focus");
+
+  this.use_input_debugger = false; //! Input debugger
+
+  const info = sys.get_sys_info() as { system_name: string };
+  this.is_HTML5 = info.system_name !== "HTML5";
+  const engine = sys.get_engine_info() as { is_debug: boolean };
+  if (!engine.is_debug) this.use_input_debugger = false;
 
   this.button_state = [false, false, false, false];
   this.dir = vmath.vector3(0, 0, 0);
@@ -44,6 +53,9 @@ export function init(this: props): void {
     tonumber(sys.get_config("display.height")) ?? 0,
     0
   );
+
+  //! Input debugger
+  msg.post("/gui#debug", this.use_input_debugger ? "enable" : "disable");
 }
 
 export function update(this: props, dt: number): void {
@@ -85,17 +97,22 @@ export function update(this: props, dt: number): void {
 export function on_input(this: props, action_id: hash, action: Action): void {
   if (action_id == hash("left")) {
     if (action.pressed) this.button_state[Buttons.left] = true;
-    else if (action.released) this.button_state[Buttons.left] = false;
-  } else if (action_id == hash("right")) {
-    if (action.pressed) this.button_state[Buttons.right] = true;
-    else if (action.released) this.button_state[Buttons.right] = false;
-  } else if (action_id == hash("down")) {
-    if (action.pressed) this.button_state[Buttons.down] = true;
-    else if (action.released) this.button_state[Buttons.down] = false;
-  } else if (action_id == hash("up")) {
-    if (action.pressed) this.button_state[Buttons.up] = true;
-    else if (action.released) this.button_state[Buttons.up] = false;
+    if (action.released) this.button_state[Buttons.left] = false;
   }
+  if (action_id == hash("right")) {
+    if (action.pressed) this.button_state[Buttons.right] = true;
+    if (action.released) this.button_state[Buttons.right] = false;
+  }
+  if (action_id == hash("down")) {
+    if (action.pressed) this.button_state[Buttons.down] = true;
+    if (action.released) this.button_state[Buttons.down] = false;
+  }
+  if (action_id == hash("up")) {
+    if (action.pressed) this.button_state[Buttons.up] = true;
+    if (action.released) this.button_state[Buttons.up] = false;
+  }
+
+  if (this.use_input_debugger) msg.post("/gui#debug", action_id, action); //! Input debugger
 }
 
 export function on_message(
@@ -125,5 +142,12 @@ export function on_message(
     this.respawn_timer <= 0
   ) {
     msg.post("/walls#script", "trigger_response", message);
+  }
+
+  // Virtual Input
+  if (message_id === hash("on_virtual_input")) {
+    const { action_id, action } = message as unknown as { action_id: hash; action: Action };
+    print(`!!! ${action_id.toString()} action -> pressed: ${action.pressed ? "true" : "false"} released: ${action.released ? "true" : "false"}`);
+    on_input.call(this, action_id, action);
   }
 }

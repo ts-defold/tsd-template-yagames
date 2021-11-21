@@ -44,3 +44,12 @@ export function on_input(this: props, action_id: hash, action: Action): void {
   this.menu[previous].forEach((node) => gui.set_enabled(node, false));
   this.menu[this.index].forEach((node) => gui.set_enabled(node, true));
 }
+
+export function on_message(this: props, message_id: hash, message: unknown): void {
+  // Virtual Input
+  print(message_id, message);
+  if (message_id == hash("on_virtual_input")) {
+    const { action_id, action } = message as { action_id: hash; action: Action };
+    on_input.call(this, action_id, action);
+  }
+}

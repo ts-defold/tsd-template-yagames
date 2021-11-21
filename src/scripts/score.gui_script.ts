@@ -120,11 +120,16 @@ export function on_input(this: props, action_id: hash, action: Action): void {
 }
 
 export function on_message(this: props, message_id: hash, message: unknown): void {
-
   if (message_id == hash("score")) {
     const { score } = message as { score: number };
     this.score = score;
 
     gui.set_text(this.nodes.score, this.score.toString());
+  }
+  
+  // Virtual Input
+  if (message_id == hash("on_virtual_input")) {
+    const { action_id, action } = message as { action_id: hash; action: Action };
+    on_input.call(this, action_id, action);
   }
 }

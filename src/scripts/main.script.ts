@@ -6,12 +6,13 @@ lldebugger.start();
 
 interface props {
   next?: string;
-  loaded?: hash;
+  loaded?: url;
   params?: { 
     target?: string;
     id?: string; 
     params?: unknown;
   };
+  prev_down: string[];
 }
 
 const GAME = "main:/game#proxy";
@@ -19,7 +20,16 @@ const TITLE = "main:/title#proxy";
 const HIGHSCORES = "main:/highscores#proxy";
 const SCORE = "main:/score#proxy";
 
+const ROUTES: { [key: string]: string } = {
+  [GAME]: "game:/ball#script",
+  [TITLE]: "title:/title#gui",
+  [HIGHSCORES]: "highscores:/highscores#gui",
+  [SCORE]: "score:/scores#score",
+};
+
 export function init(this: props): void {
+  this.prev_down = [];
+
   yagames.init((_ctx, err) => {
     if (err != undefined) {
       print("Error initializing yagames:", err);
@@ -50,6 +60,32 @@ export function update(this: props): void {
   if (this.next !== undefined) {
     msg.post(this.next, "load");
     this.next = undefined;
+  }
+
+  if (globalThis["html5"] !== undefined) {
+    const down = html5.run("window.VirtualInputDriver.down");
+    if (down !== undefined) {
+      const keys_down = down.split(",").filter(b => b !== "");
+      keys_down.forEach((key) => {
+        if (key === "") return;
+        const pressed = !this.prev_down.includes(key);
+
+        if (this.loaded && pressed) {
+          const route = Object.keys(ROUTES).find((route) => `url: [${route}]` === this.loaded?.toString());
+          if (route !== undefined) msg.post(ROUTES[route], "on_virtual_input", { action_id: hash(key.trim()), action: { pressed: true, released: false } });
+        }
+      });
+      
+      ['up', 'right', 'down', 'left', 'accept', 'back'].forEach((key) => {
+        const released = this.prev_down.includes(key) && !keys_down.includes(key);
+        if (this.loaded && released) {
+          const route = Object.keys(ROUTES).find((route) => `url: [${route}]` === this.loaded?.toString());
+          if (route !== undefined) msg.post(ROUTES[route], "on_virtual_input", { action_id: hash(key.trim()), action: { pressed: false, released: true } });
+          
+        }
+      });
+      this.prev_down = keys_down;
+    }
   }
 }
 

@@ -43,6 +43,14 @@ export function on_input(this: props, action_id: hash, action: Action): void {
   }
 }
 
+export function on_message(this: props, message_id: string, message: unknown): void {
+  // Virtual Input
+  if (message_id == hash("on_virtual_input")) {
+    const { action_id, action } = message as { action_id: hash; action: Action };
+    on_input.call(this, action_id, action);
+  }
+}
+
 function requestLeaderboard(props: props, mode: "top" | "around"): void {
   //! HTML5 Only
   const info = sys.get_sys_info() as { system_name: string };
@@ -54,7 +62,10 @@ function requestLeaderboard(props: props, mode: "top" | "around"): void {
   //* YaGames Leaderboards GetEntries
   yagames.leaderboards_get_entries("highscore", { includeUser: mode === "around", quantityTop: 5}, (_ctx, err, data) => {
     props.pending = false;
-    if (err !== undefined) return;
+    if (err !== undefined) {
+      updateLeaderboard(props, true);
+      return;
+    }
   
     print("leaderboards_get_entries ->", data, data?.entries.length, data?.userRank, data?.ranges);
     props.scores = data?.entries.map(entry => ({
