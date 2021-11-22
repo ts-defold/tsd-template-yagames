@@ -147,7 +147,6 @@ export function on_message(
   // Virtual Input
   if (message_id === hash("on_virtual_input")) {
     const { action_id, action } = message as unknown as { action_id: hash; action: Action };
-    print(`!!! ${action_id.toString()} action -> pressed: ${action.pressed ? "true" : "false"} released: ${action.released ? "true" : "false"}`);
     on_input.call(this, action_id, action);
   }
 }
