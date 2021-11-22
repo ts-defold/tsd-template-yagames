@@ -10,6 +10,10 @@ A dev environment for [Defold](https://defold.com/) pre-configured to use the Ya
 - Full BoilerPlate game project ready to transpile and go
 - File watcher via `npm run dev` to transpile on save
 
+## Bonus
+- Throwback retro console frame with virtual dpad and buttons that work with touch input on mobile
+- Online and ofline Leaderboards
+
 *Note that you will need to have [Node.js](https://nodejs.org) installed.*
 
 ## Quick Start
