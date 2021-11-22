@@ -31,7 +31,7 @@ jobs:
       run: npm run build
 
     - name: Build
-      run: 'java -jar $BOB --root ./app --archive --platform js-web --bundle-output ./bundle --verbose --variant debug resolve distclean build bundle'
+      run: 'java -jar $BOB --root ./app --archive --platform js-web --bundle-output ./bundle --verbose resolve distclean build bundle'
       
     - name: Deploy
       uses: JamesIves/github-pages-deploy-action@4.1.5
