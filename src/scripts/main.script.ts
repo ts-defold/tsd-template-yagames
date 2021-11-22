@@ -20,11 +20,18 @@ const TITLE = "main:/title#proxy";
 const HIGHSCORES = "main:/highscores#proxy";
 const SCORE = "main:/score#proxy";
 
-const ROUTES: { [key: string]: string } = {
-  [GAME]: "game:/ball#script",
-  [TITLE]: "title:/title#gui",
-  [HIGHSCORES]: "highscores:/highscores#gui",
-  [SCORE]: "score:/scores#score",
+const ROUTE_KEYS: { [key: string]: url } = {
+  [GAME]: msg.url(GAME),
+  [TITLE]: msg.url(TITLE),
+  [HIGHSCORES]: msg.url(HIGHSCORES),
+  [SCORE]: msg.url(SCORE),
+}
+
+const ROUTES: { [key: string]: url } = {
+  [GAME]: msg.url("game:/ball#script"),
+  [TITLE]: msg.url("title:/title#gui"),
+  [HIGHSCORES]: msg.url("highscores:/highscores#gui"),
+  [SCORE]: msg.url("score:/scores#score"),
 };
 
 export function init(this: props): void {
@@ -54,6 +61,10 @@ export function init(this: props): void {
 
     msg.post(TITLE, "load");
   });
+
+  if (globalThis["html5"] !== undefined) {
+    html5.run("console.log('Initializing Virtual Input Driver...')");
+  }
 }
 
 export function update(this: props): void {
@@ -71,7 +82,7 @@ export function update(this: props): void {
         const pressed = !this.prev_down.includes(key);
 
         if (this.loaded && pressed) {
-          const route = Object.keys(ROUTES).find((route) => `url: [${route}]` === this.loaded?.toString());
+          const route = Object.keys(ROUTES).find((route) => ROUTE_KEYS[route] === this.loaded);
           if (route !== undefined) msg.post(ROUTES[route], "on_virtual_input", { action_id: hash(key.trim()), action: { pressed: true, released: false } });
         }
       });
@@ -79,7 +90,7 @@ export function update(this: props): void {
       ['up', 'right', 'down', 'left', 'accept', 'back'].forEach((key) => {
         const released = this.prev_down.includes(key) && !keys_down.includes(key);
         if (this.loaded && released) {
-          const route = Object.keys(ROUTES).find((route) => `url: [${route}]` === this.loaded?.toString());
+          const route = Object.keys(ROUTES).find((route) => ROUTE_KEYS[route] === this.loaded);
           if (route !== undefined) msg.post(ROUTES[route], "on_virtual_input", { action_id: hash(key.trim()), action: { pressed: false, released: true } });
           
         }
