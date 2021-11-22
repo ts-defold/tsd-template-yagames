@@ -249,10 +249,10 @@
     </div> 
     <!-- /screen --> 
     <div class="controls"> 
-     <div class="dpad" ontouchstart="dpad(event, 'start')" ontouchmove="dpad(event, 'move')" ontouchend="dpad(event, 'end')" ontouchcancel="dpad(event, 'end')"> 
+     <div class="dpad" onmousedown="pointer(event, 'start', dpad)" onmousemove="pointer(event, 'move', dpad)" onmouseup="pointer(event, 'end', dpad)" ontouchstart="dpad(event, 'start')" ontouchmove="dpad(event, 'move')" ontouchend="dpad(event, 'end')" ontouchcancel="dpad(event, 'end')"> 
       <!-- DPAD BACKGROUND IMAGE --> 
      </div> 
-     <div class="actions" ontouchstart="actions(event, 'start')" ontouchmove="actions(event, 'move')" ontouchend="actions(event, 'end')" ontouchcancel="dpad(event, 'end')"> 
+     <div class="actions" onmousedown="pointer(event, 'start', actions)" onmousemove="pointer(event, 'move', actions)" onmouseup="pointer(event, 'end', actions)" ontouchstart="actions(event, 'start')" ontouchmove="actions(event, 'move')" ontouchend="actions(event, 'end')" ontouchcancel="dpad(event, 'end')"> 
       <!-- ACTIONS BACKGROUND IMAGE --> 
      </div> 
     </div> 
@@ -278,6 +278,19 @@
     document.body.addEventListener('touchmove', function(ev) { ev.preventDefault(); }, false);
     var dpadTouchId = -1;
     var actionsTouchId = -1;
+
+    // Touch emulation w/ pointer clicks
+    const pointer = (ev, action, func) => func({
+      targetTouches: [{
+        target: ev.target,
+        clientX: ev.clientX,
+        clientY: ev.clientY,
+        identifier: 100
+      }],
+      changedTouches: [{ identifier: 100 }],
+      preventDefault: () => ev.preventDefault(),
+      stopPropagation: () => ev.stopPropagation(),
+    }, action);
 
     // Emulate a 8 direction dpad
     function dpad(ev, action) {
