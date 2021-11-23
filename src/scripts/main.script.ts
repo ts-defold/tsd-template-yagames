@@ -25,7 +25,7 @@ const ROUTE_KEYS: { [key: string]: url } = {
   [TITLE]: msg.url(TITLE),
   [HIGHSCORES]: msg.url(HIGHSCORES),
   [SCORE]: msg.url(SCORE),
-}
+};
 
 const ROUTES: { [key: string]: url } = {
   [GAME]: msg.url("game:/ball#script"),

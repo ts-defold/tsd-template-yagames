@@ -7,6 +7,8 @@ type Message = {
   normal: vmath.vector3;
   distance: number;
   group: hash;
+  other_group: hash;
+  other_id: hash;
 };
 
 enum Buttons {
@@ -73,15 +75,7 @@ export function update(this: props, dt: number): void {
   if (this.lives > 0) go.set_position(pos);
 
   if (pos.y < -18 && this.respawn_timer == 0) {
-    this.lives -= 1;
-    msg.post("/gui#hud", "lives", { lives: this.lives });
-
-    if (this.lives > 0) {
-      this.respawn_timer = RESPAWN_TIME;
-      go.set_position(vmath.vector3(160, 24, 0));
-    } else {
-      this.respawn_timer = math.huge;
-    }
+    dead.call(this);
   }
 
   if (this.respawn_timer > 0) {
@@ -137,16 +131,30 @@ export function on_message(
         this.correction = (this.correction + comp) as vmath.vector3;
       }
     }
-  } else if (
-    message_id === hash("trigger_response") &&
-    this.respawn_timer <= 0
-  ) {
-    msg.post("/walls#script", "trigger_response", message);
+  } else if (message_id === hash("trigger_response") && this.respawn_timer <= 0) {
+    if (message.other_group == hash("spike")) {
+      dead.call(this);
+    }
+    else {
+      msg.post("/walls#script", "trigger_response", message);
+    }
   }
 
   // Virtual Input
   if (message_id === hash("on_virtual_input")) {
     const { action_id, action } = message as unknown as { action_id: hash; action: Action };
     on_input.call(this, action_id, action);
+  }
+}
+
+function dead(this: props) {
+  this.lives -= 1;
+  msg.post("/gui#hud", "lives", { lives: this.lives });
+  
+  if (this.lives > 0) {
+    this.respawn_timer = RESPAWN_TIME;
+    go.set_position(vmath.vector3(160, 24, 0));
+  } else {
+    this.respawn_timer = math.huge;
   }
 }
