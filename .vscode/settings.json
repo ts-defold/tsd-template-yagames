@@ -34,7 +34,8 @@
         "*.sprite": "textproto",
         "*.texture_profiles": "textproto",
         "*.tilemap": "textproto",
-        "*.tilesource": "textproto"
+        "*.tilesource": "textproto",
+        "*template.html": "handlebars",
     },
     "files.exclude": {
         "node_modules/": true,
