@@ -80,7 +80,7 @@ game_binding = /input/game.input_bindingc
 use_accelerometer = 1
 
 [sprite]
-max_count = 128
+max_count = 256
 subpixels = 1
 
 [spine]
