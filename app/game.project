@@ -26,3 +26,6 @@ clear_color_blue = 0.62
 [html5]
 htmlfile = /manifests/web/template.html
 
+[sprite]
+max_count = 256
+
