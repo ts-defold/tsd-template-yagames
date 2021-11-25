@@ -7,7 +7,6 @@ export const menu_item = (): void => play("Blip 17", 1.06,.05,142,.02,.01,.01,1,
 
 const fx = new Map<string, ZzFXSample>();
 function play(sound: string, ...args: number[]): void {
-  print(fx.has(sound), ...args);
   if (!fx.has(sound)) fx.set(sound, zzfx_api.build_sample(...args));
 
   const sample = fx.get(sound);
