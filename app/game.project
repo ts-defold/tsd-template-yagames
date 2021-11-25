@@ -17,6 +17,7 @@ title = tsd-template-yagames
 developer = https://github.com/ts-defold/tsd-template-yagames
 dependencies#0 = https://github.com/ts-defold/defold-lldebugger/archive/extension.zip
 dependencies#1 = https://github.com/indiesoftby/defold-yagames/archive/refs/heads/master.zip
+dependencies#2 = https://github.com/thejustinwalsh/defold-zzfx/archive/main.zip
 
 [render]
 clear_color_red = 0.79
