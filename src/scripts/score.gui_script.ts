@@ -1,4 +1,5 @@
 import * as yagames from "yagames.yagames";
+import * as fx from "../modules/fx";
 import offlineScores from "../modules/offline-highscores";
 
 type Action = {
@@ -34,7 +35,7 @@ export function init(this: props): void {
   this.initials = ["A", "A", "A"];
   this.initials_index = 0;
 
-  this.letters = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", ",", ".", ":", "!", "?"];
+  this.letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.,:!?".split("");
   this.letters_index = 0;
 
   // Cache nodes
@@ -78,17 +79,21 @@ export function update(this: props): void {
 export function on_input(this: props, action_id: hash, action: Action): void {
   if (action_id == hash("up") && action.pressed) {
     this.letters_index = (this.letters_index + 1) % this.letters.length;
+    fx.menu_item();
   }
   else if (action_id == hash("down") && action.pressed) {
     this.letters_index = (this.letters_index - 1 + this.letters.length) % this.letters.length;
+    fx.menu_item();
   }
   else if (action_id == hash("left") && action.pressed) {
     this.initials_index = (this.initials_index - 1 + this.initials.length) % this.initials.length;
     this.letters_index = this.letters.indexOf(this.initials[this.initials_index]);
+    fx.press();
   }
   else if (action_id == hash("right") && action.pressed) {
     this.initials_index = (this.initials_index + 1) % this.initials.length;
     this.letters_index = this.letters.indexOf(this.initials[this.initials_index]);
+    fx.press();
   }
   else if (action_id == hash ("back") && action.pressed) {
     if (this.initials_index > 0) {
@@ -96,7 +101,7 @@ export function on_input(this: props, action_id: hash, action: Action): void {
       this.letters_index = this.letters.indexOf(this.initials[this.initials_index]);
     }
   }
-  else if (action_id == hash("accept") || action_id == hash("start")&& action.pressed) {
+  else if (action_id == hash("accept") || action_id == hash("start") && action.pressed) {
     if (this.initials_index < 2) {
       this.initials[this.initials_index] = this.letters[this.letters_index];
       this.initials_index++;
@@ -105,6 +110,7 @@ export function on_input(this: props, action_id: hash, action: Action): void {
     else if (this.initials_index === 2) {
       if (this.submit === "no") this.submit = "yes";
     }
+    fx.press();
   }
 
   // Update current letter

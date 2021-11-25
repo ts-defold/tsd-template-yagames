@@ -1,3 +1,5 @@
+import * as fx from "../modules/fx";
+
 type Action = {
   pressed: boolean;
   released: boolean;
@@ -148,6 +150,7 @@ export function on_message(
 }
 
 function dead(this: props) {
+  fx.dead();
   this.lives -= 1;
   msg.post("/gui#hud", "lives", { lives: this.lives });
   

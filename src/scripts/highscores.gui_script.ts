@@ -1,4 +1,5 @@
 import * as yagames from "yagames.yagames";
+import * as fx from "../modules/fx";
 import offlineScores from "../modules/offline-highscores";
 
 type Action = {
@@ -31,12 +32,15 @@ export function update(this: props, _dt: number): void {
     this.pending = true;
     this.request = false;
     requestLeaderboard(this, this.mode === "top" ? "around" : "top");
+    fx.press();
   }
 }
 
 export function on_input(this: props, action_id: hash, action: Action): void {
   if ((action_id == hash("start") || action_id == hash("back")) && action.pressed) {
     msg.post("main:/main#script", "show_title");
+    fx.press();
+    
   }
   else if (action_id == hash("accept") && action.pressed) {
     this.request = true;

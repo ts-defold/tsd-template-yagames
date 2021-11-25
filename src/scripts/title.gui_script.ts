@@ -1,3 +1,6 @@
+import * as fx from "../modules/fx";
+import loc from "../modules/localization";
+
 type Action = {
   pressed: boolean;
   released: boolean;
@@ -22,15 +25,35 @@ export function init(this: props): void {
   this.menu.forEach((nodes, i) => {
     nodes.forEach((node) => gui.set_enabled(node, this.index == i));
   });
+
+  let lang = "ru";
+  if (globalThis["html5"] !== undefined) {
+    lang = html5.run("window.navigator.language").split('-')[0];
+    lang = Object.keys(loc).find((key) => key === lang) ?? "en";
+  }
+
+  gui.set_text(gui.get_node("menu-item-1"), loc[lang].start);
+  gui.set_text(gui.get_node("menu-item-2"), loc[lang].scores);
+  
+  //! HACK: Menu for ru
+  if (lang === "ru") {
+    gui.set_scale(gui.get_node("menu-item-1"), vmath.vector3(0.125, 0.15, 0.125));
+    gui.set_scale(gui.get_node("menu-item-2"), vmath.vector3(0.125, 0.15, 0.125));
+    gui.set_position(gui.get_node("menu-pip-1"), vmath.vector3(90, 80, 0.0));
+    gui.set_position(gui.get_node("menu-pip-2"), vmath.vector3(90, 50, 0.0));
+  }
 }
 
 export function on_input(this: props, action_id: hash, action: Action): void {
   const previous = this.index;
   if (action_id == hash("up") && action.pressed) {
+    fx.menu_item();
     this.index = (this.index == 0 ? this.menu.length : this.index) - 1;
   } else if (action_id == hash("down") && action.pressed) {
+    fx.menu_item();
     this.index = (this.index + 1) % this.menu.length;
   } else if (action_id == hash("accept") || action_id == hash("start") && action.pressed) {
+    fx.press();
     switch (this.index) {
       case MenuActions.Start:
         msg.post("main:/main#script", "start_game");
