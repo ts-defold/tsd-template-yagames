@@ -37,3 +37,4 @@ app/build
 app/builtins
 dmengine*
 bundle/
+platform/**
