@@ -25,10 +25,10 @@ const levels: Levels = [
     seed: 233435253,
     speed_up: 0,
     walls: [
-      { range: [1, 5], type: "range", coins: [1], coins_range: [1, 12, 3]},
-      { range: [1, 5], type: "range", coins: [1], coins_range: [1, 12, 3]},
-      { range: [1, 5], type: "range", coins: [1], coins_range: [1, 12, 3]},
-      { range: [1, 5], type: "range", coins: [1], coins_range: [1, 12, 3]},
+      { range: [1, 5], type: "range", coins: [1], coins_range: [2, 12, 5]},
+      { range: [1, 5], type: "range", coins: [1], coins_range: [2, 12, 5]},
+      { range: [1, 5], type: "range", coins: [1], coins_range: [2, 12, 5]},
+      { range: [1, 5], type: "range", coins: [1], coins_range: [2, 12, 5]},
     ]
   },
   {
@@ -42,13 +42,13 @@ const levels: Levels = [
     ]
   },
   {
-    seed: 23342,
+    seed: 489623892346,
     speed_up: 10,
     walls: [
-      { range: [6, 10], type: "range", coins_range: [5, 12, 2]},
-      { range: [6, 10], type: "range", coins_range: [5, 12, 2]},
-      { range: [6, 10], type: "range", coins_range: [5, 12, 2]},
-      { range: [6, 10], type: "range", coins_range: [5, 12, 2]},
+      { range: [6, 10], type: "range", coins_range: [5, 12, 3]},
+      { range: [6, 10], type: "range", coins_range: [5, 12, 3]},
+      { range: [6, 10], type: "range", coins_range: [5, 12, 3]},
+      { range: [6, 10], type: "range", coins_range: [5, 12, 3]},
     ]
   },
 ];
