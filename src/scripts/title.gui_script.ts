@@ -26,7 +26,7 @@ export function init(this: props): void {
     nodes.forEach((node) => gui.set_enabled(node, this.index == i));
   });
 
-  let lang = "ru";
+  let lang = "en";
   if (globalThis["html5"] !== undefined) {
     lang = html5.run("window.navigator.language").split('-')[0];
     lang = Object.keys(loc).find((key) => key === lang) ?? "en";

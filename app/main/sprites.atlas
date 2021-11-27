@@ -26,6 +26,10 @@ images {
   image: "/assets/spikes.png"
   sprite_trim_mode: SPRITE_TRIM_MODE_OFF
 }
+images {
+  image: "/assets/coin-dummy.png"
+  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+}
 animations {
   id: "coin"
   images {

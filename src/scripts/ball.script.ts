@@ -11,6 +11,7 @@ type Message = {
   group: hash;
   other_group: hash;
   other_id: hash;
+  enter?: boolean;
 };
 
 enum Buttons {
@@ -34,7 +35,7 @@ interface props {
   use_input_debugger: boolean;
 }
 
-go.property("speed", 60);
+go.property("speed", 90);
 go.property("lives", 3);
 
 export function init(this: props): void {
@@ -134,8 +135,12 @@ export function on_message(
       }
     }
   } else if (message_id === hash("trigger_response") && this.respawn_timer <= 0) {
-    if (message.other_group == hash("spike")) {
+    if (message.other_group == hash("spike") && message.enter === true) {
       dead.call(this);
+    }
+    else if (message.other_group == hash("coin") && message.enter === true) {
+      msg.post("/gui#hud", "score", { score: 1 });
+      msg.post(message.other_id, "disable");
     }
     else {
       msg.post("/walls#script", "trigger_response", message);
