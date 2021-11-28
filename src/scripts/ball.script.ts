@@ -66,8 +66,7 @@ export function init(this: props): void {
   this.boost_strength = 0;
   this.boost_time = 0;
   this.boost_arrows = [hash("/boost-e"), hash("/boost-se"), hash("/boost-s"), hash("/boost-sw"), hash("/boost-w"), hash("/boost-nw"), hash("/boost-n"), hash("/boost-ne")];
-  this.boost_arrows.forEach(arrow => msg.post(arrow, "disable"));
-  
+  this.boost_arrows.forEach(arrow => msg.post(arrow, "disable")); 
 
   this.bounds = vmath.vector3(
     tonumber(sys.get_config("display.width")) ?? 0,
@@ -121,9 +120,6 @@ export function update(this: props, dt: number): void {
   // Update position
   const dir = this.boost_strength > 0 ? vmath.normalize((this.boost_dir + (this.dir / 2)) as vmath.vector3) : this.dir;
   pos = (pos + dir * (this.speed + this.boost_strength) * dt) as vmath.vector3;
-  if (pos.x < 12) pos.x = 12;
-  if (pos.x > this.bounds.x - 12) pos.x = this.bounds.x - 12;
-  if (pos.y > this.bounds.y - 12) pos.y = this.bounds.y - 12;
   if (this.lives > 0) go.set_position(pos);
 
   // Update boost strength
@@ -180,7 +176,7 @@ export function on_message(
   if (
     message_id === hash("contact_point_response") &&
     message.group == hash("wall") &&
-    this.respawn_timer <= 0
+    (message.other_id === hash("/arena") || this.respawn_timer <= 0)
   ) {
     if (message.distance > 0) {
       const proj = vmath.project(
