@@ -19,9 +19,8 @@ enum Buttons {
   right = 1,
   up = 2,
   down = 3,
+  action = 4,
 }
-
-const RESPAWN_TIME = 3;
 
 interface props {
   speed: number;
@@ -33,10 +32,19 @@ interface props {
   respawn_timer: number;
   is_HTML5: boolean;
   use_input_debugger: boolean;
+  boost: 'recharge' | 'hold' | 'ready' | 'active';
+  boost_dir: vmath.vector3;
+  boost_strength: number;
+  boost_time: number;
+  boost_arrows: hash[];
 }
 
 go.property("speed", 90);
 go.property("lives", 3);
+
+const RESPAWN_TIME = 3;
+const BOOST_STRENGTH = 400;
+const BOOST_TIME = 0.5;
 
 export function init(this: props): void {
   msg.post(".", "acquire_input_focus");
@@ -53,6 +61,14 @@ export function init(this: props): void {
   this.correction = vmath.vector3(0, 0, 0);
   this.respawn_timer = 0;
 
+  this.boost = 'ready';
+  this.boost_dir = vmath.vector3(0, 0, 0);
+  this.boost_strength = 0;
+  this.boost_time = 0;
+  this.boost_arrows = [hash("/boost-e"), hash("/boost-se"), hash("/boost-s"), hash("/boost-sw"), hash("/boost-w"), hash("/boost-nw"), hash("/boost-n"), hash("/boost-ne")];
+  this.boost_arrows.forEach(arrow => msg.post(arrow, "disable"));
+  
+
   this.bounds = vmath.vector3(
     tonumber(sys.get_config("display.width")) ?? 0,
     tonumber(sys.get_config("display.height")) ?? 0,
@@ -67,16 +83,56 @@ export function update(this: props, dt: number): void {
   this.correction = vmath.vector3(0, 0, 0);
   let pos = go.get_position();
 
-  const [left, right, up, down] = this.button_state;
+  // Update dir vector
+  const [left, right, up, down, action] = this.button_state;
   this.dir.x = left ? -1 : right ? 1 : 0;
   this.dir.y = down ? -1 : up ? 1 : 0;
+  this.dir = this.dir.x == 0 && this.dir.y == 0 ? this.dir : vmath.normalize(this.dir);
 
-  pos = (pos + this.dir * this.speed * dt) as vmath.vector3;
+  // Handle boost states
+  if (this.boost === "ready" && action) {
+    this.boost = "hold";
+  }
+  else if (this.boost === "hold" && !action) {
+    this.boost = "active";
+    this.boost_arrows.forEach(arrow => msg.post(arrow, "disable"));
+    this.boost_strength = BOOST_STRENGTH;
+    this.boost_time = 0;
+  }
+  else if (this.boost === "active" && this.boost_strength <= 0) {
+    this.boost = "recharge";
+    this.boost_dir = vmath.vector3(0, 0, 0);
+    this.boost_strength = 0;
+  }
+  else if (this.boost === "recharge" && true /* cooldown > 0 */) {
+    this.boost = "ready";
+  }
+
+  // Show boost dir indicator
+  if (this.boost === "hold") {
+    const angle = math.atan2(-this.dir.y, this.dir.x);
+    const octant = math.floor(8 * angle / (2 * Math.PI) + 8.5) % 8;
+    this.boost_arrows.forEach(arrow => msg.post(arrow, "disable"));
+    msg.post(this.boost_arrows[octant], "enable");
+    this.boost_dir = this.dir;
+    this.dir = vmath.vector3(0, 0, 0);
+  }
+  
+  // Update position
+  const dir = this.boost_strength > 0 ? vmath.normalize((this.boost_dir + (this.dir / 2)) as vmath.vector3) : this.dir;
+  pos = (pos + dir * (this.speed + this.boost_strength) * dt) as vmath.vector3;
   if (pos.x < 12) pos.x = 12;
   if (pos.x > this.bounds.x - 12) pos.x = this.bounds.x - 12;
   if (pos.y > this.bounds.y - 12) pos.y = this.bounds.y - 12;
   if (this.lives > 0) go.set_position(pos);
 
+  // Update boost strength
+  if (this.boost === "active") {
+    this.boost_time += dt;
+    this.boost_strength = vmath.lerp(this.boost_time / BOOST_TIME, BOOST_STRENGTH, 0);
+  }
+
+  // Check dead
   if (pos.y < -18 && this.respawn_timer == 0) {
     dead.call(this);
   }
@@ -108,6 +164,10 @@ export function on_input(this: props, action_id: hash, action: Action): void {
     if (action.pressed) this.button_state[Buttons.up] = true;
     if (action.released) this.button_state[Buttons.up] = false;
   }
+  if (action_id == hash("accept")) {
+    if (action.pressed) this.button_state[Buttons.action] = true;
+    if (action.released) this.button_state[Buttons.action] = false;
+  }
 
   if (this.use_input_debugger) msg.post("/gui#debug", action_id, action); //! Input debugger
 }
@@ -132,6 +192,11 @@ export function on_message(
           message.normal) as vmath.vector3;
         go.set_position((go.get_position() + comp) as vmath.vector3);
         this.correction = (this.correction + comp) as vmath.vector3;
+        
+        // Bounce on boost
+        if (this.boost_strength > 0) {
+          this.boost_dir = message.normal;
+        }
       }
     }
   } else if (message_id === hash("trigger_response") && this.respawn_timer <= 0) {
@@ -156,6 +221,7 @@ export function on_message(
 
 function dead(this: props) {
   fx.dead();
+  this.boost_strength = 0;
   this.lives -= 1;
   msg.post("/gui#hud", "lives", { lives: this.lives });
   
