@@ -200,6 +200,7 @@ export function on_message(
       dead.call(this);
     }
     else if (message.other_group == hash("coin") && message.enter === true) {
+      fx.coin();
       msg.post("/gui#hud", "score", { score: 1 });
       msg.post(message.other_id, "disable");
     }

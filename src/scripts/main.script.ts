@@ -122,10 +122,22 @@ export function on_message(
   else if (message_id == hash("show_fullscreen_adv")) {
     const { then } = message as { then: string };
     yagames.adv_show_fullscreen_adv({
-      open: () => print("Show Ad"),
-      close: () => msg.post("main:/main#script", then),
-      offline: () => msg.post("main:/main#script", then),
-      error: () => msg.post("main:/main#script", then),
+      open: () => {
+        print("Show Ad");
+        msg.post("main:/audio#fx", "mute");
+      },
+      close: () => {
+        msg.post("main:/audio#fx", "unmute");
+        msg.post("main:/main#script", then);
+      },
+      offline: () => {
+        msg.post("main:/audio#fx", "unmute");
+        msg.post("main:/main#script", then);
+      },
+      error: () => {
+        msg.post("main:/audio#fx", "unmute");
+        msg.post("main:/main#script", then);
+      },
     });
   }
   else if (message_id == hash("proxy_loaded")) {
