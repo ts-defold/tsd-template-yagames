@@ -69,8 +69,8 @@ export function init(this: props): void {
   this.boost_arrows.forEach(arrow => msg.post(arrow, "disable")); 
 
   this.bounds = vmath.vector3(
-    tonumber(sys.get_config("display.width")) ?? 0,
-    tonumber(sys.get_config("display.height")) ?? 0,
+    tonumber(sys.get_config_int("display.width")) ?? 0,
+    tonumber(sys.get_config_int("display.height")) ?? 0,
     0
   );
 
