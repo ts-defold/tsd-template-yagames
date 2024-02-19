@@ -120,8 +120,8 @@ export function on_message(
   message_id: hash,
   message: Message
 ): void {
-  if (message_id == hash("trigger_response")) {
-    if (message.other_group == hash("pass") && !message.enter && !this.triggered_walls.has(message.other_id)) {
+  if (message_id === hash("trigger_response")) {
+    if (message.other_group === hash("pass") && !message.enter && !this.triggered_walls.has(message.other_id)) {
       this.triggered_walls.add(message.other_id);
     }
   }

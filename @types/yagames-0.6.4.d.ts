@@ -39,13 +39,13 @@ declare module 'yagames.yagames' {
 
   export function player_set_data(data: Record<string, unknown>, flush: boolean, callback: ApiCallback): void;
 
-  export function player_get_data(keys: Array<string> | null, callback: ApiCallback): void;
+  export function player_get_data(keys: Array<string> | undefined, callback: ApiCallback): void;
 
   export function player_set_stats(stats: Record<string, number>, callback: ApiCallback): void;
 
   export function player_increment_stats(stats: Record<string, number>, callback: ApiCallback): void;
 
-  export function player_get_stats(keys: Array<string> | null, callback: ApiCallback): void;
+  export function player_get_stats(keys: Array<string> | undefined, callback: ApiCallback): void;
 
   /**
  * @deprecated Use `player_get_unqiue_id` instead.
@@ -66,7 +66,7 @@ declare module 'yagames.yagames' {
 
   //* In-Game Purchases
 
-  export function payments_init(options: { signed?: boolean } | null, callback: ApiCallback): void;
+  export function payments_init(options: { signed?: boolean } | undefined, callback: ApiCallback): void;
 
   export interface PaymentsPurchaseOptions {
     id: string;
@@ -78,7 +78,7 @@ declare module 'yagames.yagames' {
     developerPayload: string;
     signature: string;
   }) => void;
-  export function payments_purchase(options: PaymentsPurchaseOptions | null, callback: PaymentsPurchaseCallback): void;
+  export function payments_purchase(options: PaymentsPurchaseOptions | undefined, callback: PaymentsPurchaseCallback): void;
 
   export type PaymentsPurchasesCallback = (ctx: Context, err?: string, data?: {
     purchases: Array<{
@@ -134,7 +134,7 @@ declare module 'yagames.yagames' {
     getAvatarSrc?: "small" | "medium" | "large";
     getAvatarSrcSet?: "small" | "medium" | "large"
   }
-  export function leaderboards_get_player_entry(leaderboard_name: string, options: LeaderboardsGetPlayerEntryOptions | null, callback: ApiCallback): void;
+  export function leaderboards_get_player_entry(leaderboard_name: string, options: LeaderboardsGetPlayerEntryOptions | undefined, callback: ApiCallback): void;
 
   export type LeaderboardsGetPlayerEntriesCallback = (ctx: Context, err?: string, data?: {
   ranges: [ 
@@ -171,7 +171,7 @@ declare module 'yagames.yagames' {
     getAvatarSrc?: "small" | "medium" | "large";
     getAvatarSrcSet?: "small" | "medium" | "large";
   }
-  export function leaderboards_get_entries(leaderboard_name: string, options: LeaderboardsGetEntriesOptions | null, callback: LeaderboardsGetPlayerEntriesCallback): void;
+  export function leaderboards_get_entries(leaderboard_name: string, options: LeaderboardsGetEntriesOptions | undefined, callback: LeaderboardsGetPlayerEntriesCallback): void;
 
   export function leaderboards_set_score(leaderboard_name: string, score: number, extra_data: string, callback: ApiCallback): void;
 
@@ -231,7 +231,7 @@ declare module 'yagames.yagames' {
 
   export function storage_init(callback: ApiCallback): void;
 
-  export function storage_get_item(key: string): string | null;
+  export function storage_get_item(key: string): string | undefined;
 
   export function storage_set_item(key: string, value: string): void;
 
@@ -239,7 +239,7 @@ declare module 'yagames.yagames' {
 
   export function storage_clear(): void;
 
-  export function storage_key(n: number): string | null;
+  export function storage_key(n: number): string | undefined;
 
   export function storage_length(): number;
 

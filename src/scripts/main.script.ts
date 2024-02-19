@@ -38,20 +38,20 @@ export function init(this: props): void {
   this.prev_down = [];
 
   yagames.init((_ctx, err) => {
-    if (err != undefined) {
+    if (err !== undefined) {
       print("Error initializing yagames:", err);
       return;
     }
 
     //* YaGames Authenticate
     yagames.auth_open_auth_dialog((_ctx, err) => {
-      if (err != undefined) {
+      if (err !== undefined) {
         print("Error opening auth dialog:", err);
       }
 
       //* YaGames Initialize Leaderboards
       yagames.leaderboards_init((_ctx, err) => {
-        if (err != undefined) {
+        if (err !== undefined) {
           print("Error initializing leaderboards:", err);
           return;
         }
@@ -119,7 +119,7 @@ export function on_message(
   else if (message_id === hash("show_highscores")) {
     this.next = HIGHSCORES;
   }
-  else if (message_id == hash("show_fullscreen_adv")) {
+  else if (message_id === hash("show_fullscreen_adv")) {
     const { then } = message as { then: string };
     yagames.adv_show_fullscreen_adv({
       open: () => {
@@ -140,7 +140,7 @@ export function on_message(
       },
     });
   }
-  else if (message_id == hash("proxy_loaded")) {
+  else if (message_id === hash("proxy_loaded")) {
     if (this.loaded) msg.post(this.loaded, "unload");
     
     this.loaded = sender;

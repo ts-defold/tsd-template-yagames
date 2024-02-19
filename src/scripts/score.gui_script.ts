@@ -77,31 +77,31 @@ export function update(this: props): void {
 }
 
 export function on_input(this: props, action_id: hash, action: Action): void {
-  if (action_id == hash("up") && action.pressed) {
+  if (action_id === hash("up") && action.pressed) {
     this.letters_index = (this.letters_index + 1) % this.letters.length;
     fx.menu_item();
   }
-  else if (action_id == hash("down") && action.pressed) {
+  else if (action_id === hash("down") && action.pressed) {
     this.letters_index = (this.letters_index - 1 + this.letters.length) % this.letters.length;
     fx.menu_item();
   }
-  else if (action_id == hash("left") && action.pressed) {
+  else if (action_id === hash("left") && action.pressed) {
     this.initials_index = (this.initials_index - 1 + this.initials.length) % this.initials.length;
     this.letters_index = this.letters.indexOf(this.initials[this.initials_index]);
     fx.press();
   }
-  else if (action_id == hash("right") && action.pressed) {
+  else if (action_id === hash("right") && action.pressed) {
     this.initials_index = (this.initials_index + 1) % this.initials.length;
     this.letters_index = this.letters.indexOf(this.initials[this.initials_index]);
     fx.press();
   }
-  else if (action_id == hash ("back") && action.pressed) {
+  else if (action_id === hash ("back") && action.pressed) {
     if (this.initials_index > 0) {
       this.initials_index--;
       this.letters_index = this.letters.indexOf(this.initials[this.initials_index]);
     }
   }
-  else if (action_id == hash("accept") || action_id == hash("start") && action.pressed) {
+  else if (action_id === hash("accept") || action_id === hash("start") && action.pressed) {
     if (this.initials_index < 2) {
       this.initials[this.initials_index] = this.letters[this.letters_index];
       this.initials_index++;
@@ -120,13 +120,13 @@ export function on_input(this: props, action_id: hash, action: Action): void {
   this.initials[this.initials_index] =  this.letters[this.letters_index];
 
   // Update cursor visibility
-  Object.keys(this.nodes["cursor-1"]).forEach(k => gui.set_enabled(this.nodes["cursor-1"][k], this.initials_index == 0 ? true : false));
-  Object.keys(this.nodes["cursor-2"]).forEach(k => gui.set_enabled(this.nodes["cursor-2"][k], this.initials_index == 1 ? true : false));
-  Object.keys(this.nodes["cursor-3"]).forEach(k => gui.set_enabled(this.nodes["cursor-3"][k], this.initials_index == 2 ? true : false));
+  Object.keys(this.nodes["cursor-1"]).forEach(k => gui.set_enabled(this.nodes["cursor-1"][k], this.initials_index === 0 ? true : false));
+  Object.keys(this.nodes["cursor-2"]).forEach(k => gui.set_enabled(this.nodes["cursor-2"][k], this.initials_index === 1 ? true : false));
+  Object.keys(this.nodes["cursor-3"]).forEach(k => gui.set_enabled(this.nodes["cursor-3"][k], this.initials_index === 2 ? true : false));
 }
 
 export function on_message(this: props, message_id: hash, message: unknown): void {
-  if (message_id == hash("score")) {
+  if (message_id === hash("score")) {
     const { score } = message as { score: number };
     this.score = score;
 
@@ -134,7 +134,7 @@ export function on_message(this: props, message_id: hash, message: unknown): voi
   }
   
   // Virtual Input
-  if (message_id == hash("on_virtual_input")) {
+  if (message_id === hash("on_virtual_input")) {
     const { action_id, action } = message as { action_id: hash; action: Action };
     on_input.call(this, action_id, action);
   }

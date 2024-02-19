@@ -13,16 +13,16 @@ export function init(this: props): void {
 }
 
 export function on_message(this: props, message_id: hash, message: Action): void {
-  if (message_id == hash("left")) {
+  if (message_id === hash("left")) {
     if (message.pressed) gui.set_enabled(this.dir_nodes[0], true);
     if (message.released) gui.set_enabled(this.dir_nodes[0], false);
-  } else if (message_id == hash("right")) {
+  } else if (message_id === hash("right")) {
     if (message.pressed) gui.set_enabled(this.dir_nodes[1], true);
     if (message.released) gui.set_enabled(this.dir_nodes[1], false);
-  } else if (message_id == hash("up")) {
+  } else if (message_id === hash("up")) {
     if (message.pressed) gui.set_enabled(this.dir_nodes[2], true);
     if (message.released) gui.set_enabled(this.dir_nodes[2], false);
-  } else if (message_id == hash("down")) {
+  } else if (message_id === hash("down")) {
     if (message.pressed) gui.set_enabled(this.dir_nodes[3], true);
     if (message.released) gui.set_enabled(this.dir_nodes[3], false);
   }

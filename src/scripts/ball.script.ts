@@ -86,7 +86,7 @@ export function update(this: props, dt: number): void {
   const [left, right, up, down, action] = this.button_state;
   this.dir.x = left ? -1 : right ? 1 : 0;
   this.dir.y = down ? -1 : up ? 1 : 0;
-  this.dir = this.dir.x == 0 && this.dir.y == 0 ? this.dir : vmath.normalize(this.dir);
+  this.dir = this.dir.x === 0 && this.dir.y === 0 ? this.dir : vmath.normalize(this.dir);
 
   // Handle boost states
   if (this.boost === "ready" && action) {
@@ -129,7 +129,7 @@ export function update(this: props, dt: number): void {
   }
 
   // Check dead
-  if (pos.y < -18 && this.respawn_timer == 0) {
+  if (pos.y < -18 && this.respawn_timer === 0) {
     dead.call(this);
   }
 
@@ -144,23 +144,23 @@ export function update(this: props, dt: number): void {
 }
 
 export function on_input(this: props, action_id: hash, action: Action): void {
-  if (action_id == hash("left")) {
+  if (action_id === hash("left")) {
     if (action.pressed) this.button_state[Buttons.left] = true;
     if (action.released) this.button_state[Buttons.left] = false;
   }
-  if (action_id == hash("right")) {
+  if (action_id === hash("right")) {
     if (action.pressed) this.button_state[Buttons.right] = true;
     if (action.released) this.button_state[Buttons.right] = false;
   }
-  if (action_id == hash("down")) {
+  if (action_id === hash("down")) {
     if (action.pressed) this.button_state[Buttons.down] = true;
     if (action.released) this.button_state[Buttons.down] = false;
   }
-  if (action_id == hash("up")) {
+  if (action_id === hash("up")) {
     if (action.pressed) this.button_state[Buttons.up] = true;
     if (action.released) this.button_state[Buttons.up] = false;
   }
-  if (action_id == hash("accept")) {
+  if (action_id === hash("accept")) {
     if (action.pressed) this.button_state[Buttons.action] = true;
     if (action.released) this.button_state[Buttons.action] = false;
   }
@@ -175,7 +175,7 @@ export function on_message(
 ): void {
   if (
     message_id === hash("contact_point_response") &&
-    message.group == hash("wall") &&
+    message.group === hash("wall") &&
     (message.other_id === hash("/arena") || this.respawn_timer <= 0)
   ) {
     if (message.distance > 0) {
@@ -196,10 +196,10 @@ export function on_message(
       }
     }
   } else if (message_id === hash("trigger_response") && this.respawn_timer <= 0) {
-    if (message.other_group == hash("spike") && message.enter === true) {
+    if (message.other_group === hash("spike") && message.enter === true) {
       dead.call(this);
     }
-    else if (message.other_group == hash("coin") && message.enter === true) {
+    else if (message.other_group === hash("coin") && message.enter === true) {
       fx.coin();
       msg.post("/gui#hud", "score", { score: 1 });
       msg.post(message.other_id, "disable");

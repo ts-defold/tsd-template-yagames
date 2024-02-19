@@ -37,19 +37,19 @@ export function update(this: props, _dt: number): void {
 }
 
 export function on_input(this: props, action_id: hash, action: Action): void {
-  if ((action_id == hash("start") || action_id == hash("back")) && action.pressed) {
+  if ((action_id === hash("start") || action_id === hash("back")) && action.pressed) {
     msg.post("main:/main#script", "show_title");
     fx.press();
     
   }
-  else if (action_id == hash("accept") && action.pressed) {
+  else if (action_id === hash("accept") && action.pressed) {
     this.request = true;
   }
 }
 
 export function on_message(this: props, message_id: string, message: unknown): void {
   // Virtual Input
-  if (message_id == hash("on_virtual_input")) {
+  if (message_id === hash("on_virtual_input")) {
     const { action_id, action } = message as { action_id: hash; action: Action };
     on_input.call(this, action_id, action);
   }
