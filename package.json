@@ -14,7 +14,6 @@
   },
   "scripts": {
     "resolve": "library resolve",
-    "clean": "tstl --clean",
     "build": "tstl",
     "lint": "eslint src",
     "dev": "tstl --watch"
