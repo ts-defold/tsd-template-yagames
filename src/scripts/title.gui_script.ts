@@ -23,7 +23,7 @@ export function init(this: props): void {
   this.menu = [[gui.get_node("menu-pip-1")], [gui.get_node("menu-pip-2")]];
 
   this.menu.forEach((nodes, i) => {
-    nodes.forEach((node) => gui.set_enabled(node, this.index == i));
+    nodes.forEach((node) => gui.set_enabled(node, this.index === i));
   });
 
   let lang = "en";
@@ -46,13 +46,13 @@ export function init(this: props): void {
 
 export function on_input(this: props, action_id: hash, action: Action): void {
   const previous = this.index;
-  if (action_id == hash("up") && action.pressed) {
+  if (action_id === hash("up") && action.pressed) {
     fx.menu_item();
-    this.index = (this.index == 0 ? this.menu.length : this.index) - 1;
-  } else if (action_id == hash("down") && action.pressed) {
+    this.index = (this.index === 0 ? this.menu.length : this.index) - 1;
+  } else if (action_id === hash("down") && action.pressed) {
     fx.menu_item();
     this.index = (this.index + 1) % this.menu.length;
-  } else if (action_id == hash("accept") || action_id == hash("start") && action.pressed) {
+  } else if (action_id === hash("accept") || action_id === hash("start") && action.pressed) {
     fx.press();
     switch (this.index) {
       case MenuActions.Start:
@@ -71,7 +71,7 @@ export function on_input(this: props, action_id: hash, action: Action): void {
 export function on_message(this: props, message_id: hash, message: unknown): void {
   // Virtual Input
   print(message_id, message);
-  if (message_id == hash("on_virtual_input")) {
+  if (message_id === hash("on_virtual_input")) {
     const { action_id, action } = message as { action_id: hash; action: Action };
     on_input.call(this, action_id, action);
   }
