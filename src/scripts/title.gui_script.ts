@@ -55,9 +55,11 @@ export function on_input(this: props, action_id: hash, action: Action): void {
   } else if (action_id === hash("accept") || action_id === hash("start") && action.pressed) {
     fx.press();
     switch (this.index) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison
       case MenuActions.Start:
         msg.post("main:/main#script", "start_game");
         break;
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison
       case MenuActions.Scores:
         msg.post("main:/main#script", "show_highscores");
         break;
