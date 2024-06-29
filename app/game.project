@@ -25,6 +25,10 @@ clear_color_blue = 0.62
 
 [html5]
 htmlfile = /manifests/web/template.html
+scale_mode = no_scale
+show_console_banner = 0
+show_made_with_defold = 0
+show_fullscreen_button = 0
 
 [sprite]
 max_count = 256
