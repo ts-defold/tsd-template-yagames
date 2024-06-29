@@ -369,6 +369,9 @@
   </script> 
   <!-- Defold Script Init --> 
   <script id="engine-loader" type="text/javascript" src="dmloader.js"></script> 
+  <script id="custom_setup" type="text/javascript">
+        CUSTOM_PARAMETERS['resize_window_callback'] = function() { /* no-op */ };
+  </script> 
   <script id="engine-setup" type="text/javascript">
 	var extra_params = {
 		archive_location_filter: function( path ) {
