@@ -362,8 +362,8 @@ function createWasm() {
   };
   function receiveInstance(instance, module) {
     wasmExports = instance.exports;
-    wasmTable = wasmExports["Wi"];
-    addOnInit(wasmExports["Ri"]);
+    wasmTable = wasmExports["Zi"];
+    addOnInit(wasmExports["Ui"]);
     removeRunDependency("wasm-instantiate");
     return wasmExports;
   }
@@ -385,14 +385,14 @@ function createWasm() {
 var tempDouble;
 var tempI64;
 var ASM_CONSTS = {
-  277712: function _() {
+  278544: function _() {
     if (navigator.userAgent.toLowerCase().indexOf("chrome") > -1) {
       console.log("%c    %c    Made with Defold    %c    %c    https://www.defold.com", "background: #fd6623; padding:5px 0; border: 5px;", "background: #272c31; color: #fafafa; padding:5px 0;", "background: #39a3e4; padding:5px 0;", "background: #ffffff; color: #000000; padding:5px 0;");
     } else {
       console.log("Made with Defold -=[ https://www.defold.com ]=-");
     }
   },
-  278140: function _($0) {
+  278972: function _($0) {
     var jsResult;
     var isSuccess = 1;
     try {
@@ -406,19 +406,25 @@ var ASM_CONSTS = {
     var stringOnWasmHeap = stringToNewUTF8(jsResult);
     return stringOnWasmHeap;
   },
-  278408: function _() {
+  279240: function _() {
     document.removeEventListener("click", Module.__defold_interaction_listener);
     document.removeEventListener("keyup", Module.__defold_interaction_listener);
     document.removeEventListener("touchend", Module.__defold_interaction_listener);
     Module.__defold_interaction_listener = undefined;
   },
-  278696: function _() {
+  279528: function _() {
     Module.__defold_interaction_listener = function () {
       _dmScript_RunInteractionCallback();
     };
     document.addEventListener("click", Module.__defold_interaction_listener);
     document.addEventListener("keyup", Module.__defold_interaction_listener);
     document.addEventListener("touchend", Module.__defold_interaction_listener);
+  },
+  279849: function _($0) {
+    Module.printErr(UTF8ToString($0));
+  },
+  279888: function _($0) {
+    Module.print(UTF8ToString($0));
   }
 };
 function ExitStatus(status) {
@@ -721,7 +727,7 @@ function _YaGamesPrivate_DeviceInfo_IsTablet() {
 }
 function _YaGamesPrivate_DeviceInfo_Type() {
   var self = YaGamesPrivate;
-  var ctype = stringToNewUTF8(self._ysdk.deviceInfo.type);
+  var ctype = stringToNewUTF8(self._ysdk.deviceInfo.type || "null");
   return ctype;
 }
 function _YaGamesPrivate_Environment() {
@@ -746,6 +752,22 @@ var _YaGamesPrivate_Event_On = function _YaGamesPrivate_Event_On(cevent_name, cb
     self.delaySend(cb_id, self.toErrStr(err));
   }
 };
+function _YaGamesPrivate_Features_GameplayAPI_Start() {
+  var self = YaGamesPrivate;
+  try {
+    self._ysdk.features.GameplayAPI.start();
+  } catch (err) {
+    console.warn(err);
+  }
+}
+function _YaGamesPrivate_Features_GameplayAPI_Stop() {
+  var self = YaGamesPrivate;
+  try {
+    self._ysdk.features.GameplayAPI.stop();
+  } catch (err) {
+    console.warn(err);
+  }
+}
 function _YaGamesPrivate_Features_LoadingAPI_Ready() {
   var self = YaGamesPrivate;
   try {
@@ -1212,6 +1234,9 @@ function _YaGamesPrivate_Screen_Fullscreen_Status() {
   var status = YaGamesPrivate._ysdk.screen.fullscreen.status;
   var cstatus = stringToNewUTF8(status);
   return cstatus;
+}
+function _YaGamesPrivate_ServerTime() {
+  return YaGamesPrivate._ysdk.serverTime() || 0;
 }
 var _YaGamesPrivate_Shortcut_CanShowPrompt = function _YaGamesPrivate_Shortcut_CanShowPrompt(cb_id) {
   var self = YaGamesPrivate;
@@ -10163,58 +10188,61 @@ for (var i = 0; i < 288; ++i) {
   miniTempWebGLIntBuffers[i] = miniTempWebGLIntBuffersStorage.subarray(0, i + 1);
 }
 var wasmImports = {
-  Qi: _YaGamesPrivate_Adv_GetBannerAdvStatus,
-  Pi: _YaGamesPrivate_Adv_HideBannerAdv,
-  Oi: _YaGamesPrivate_Adv_ShowBannerAdv,
-  Ni: _YaGamesPrivate_Adv_ShowFullscreenAdv,
-  Mi: _YaGamesPrivate_Adv_ShowRewardedVideo,
-  Li: _YaGamesPrivate_Banner_Init,
-  Ki: _YaGamesPrivate_Clipboard_WriteText,
-  Ji: _YaGamesPrivate_DeviceInfo_IsDesktop,
-  Ii: _YaGamesPrivate_DeviceInfo_IsMobile,
-  Hi: _YaGamesPrivate_DeviceInfo_IsTV,
-  Gi: _YaGamesPrivate_DeviceInfo_IsTablet,
-  Fi: _YaGamesPrivate_DeviceInfo_Type,
-  Ei: _YaGamesPrivate_Environment,
-  Di: _YaGamesPrivate_Event_Dispatch,
-  Ci: _YaGamesPrivate_Event_On,
-  Bi: _YaGamesPrivate_Features_LoadingAPI_Ready,
-  Ai: _YaGamesPrivate_Feedback_CanReview,
-  zi: _YaGamesPrivate_Feedback_RequestReview,
-  yi: _YaGamesPrivate_GetFlags,
-  xi: _YaGamesPrivate_GetLeaderboards,
-  wi: _YaGamesPrivate_GetPayments,
-  vi: _YaGamesPrivate_GetPlayer,
-  ui: _YaGamesPrivate_GetStorage,
-  ti: _YaGamesPrivate_IsAvailableMethod,
-  si: _YaGamesPrivate_Leaderboards_GetDescription,
-  ri: _YaGamesPrivate_Leaderboards_GetEntries,
-  qi: _YaGamesPrivate_Leaderboards_GetPlayerEntry,
-  pi: _YaGamesPrivate_Leaderboards_SetScore,
-  oi: _YaGamesPrivate_OpenAuthDialog,
-  ni: _YaGamesPrivate_Payments_ConsumePurchase,
-  mi: _YaGamesPrivate_Payments_GetCatalog,
-  li: _YaGamesPrivate_Payments_GetPurchases,
-  ki: _YaGamesPrivate_Payments_Purchase,
-  ji: _YaGamesPrivate_Player_GetData,
-  ii: _YaGamesPrivate_Player_GetID,
-  hi: _YaGamesPrivate_Player_GetIDsPerGame,
-  gi: _YaGamesPrivate_Player_GetMode,
-  fi: _YaGamesPrivate_Player_GetName,
-  ei: _YaGamesPrivate_Player_GetPayingStatus,
-  di: _YaGamesPrivate_Player_GetPersonalInfo,
-  ci: _YaGamesPrivate_Player_GetPhoto,
-  bi: _YaGamesPrivate_Player_GetSignature,
-  ai: _YaGamesPrivate_Player_GetStats,
-  $h: _YaGamesPrivate_Player_GetUniqueID,
-  _h: _YaGamesPrivate_Player_IncrementStats,
-  Zh: _YaGamesPrivate_Player_SetData,
-  Yh: _YaGamesPrivate_Player_SetStats,
-  Xh: _YaGamesPrivate_RegisterCallbacks,
-  Wh: _YaGamesPrivate_RemoveCallbacks,
-  Vh: _YaGamesPrivate_Screen_Fullscreen_Exit,
-  Uh: _YaGamesPrivate_Screen_Fullscreen_Request,
-  Th: _YaGamesPrivate_Screen_Fullscreen_Status,
+  Ti: _YaGamesPrivate_Adv_GetBannerAdvStatus,
+  Si: _YaGamesPrivate_Adv_HideBannerAdv,
+  Ri: _YaGamesPrivate_Adv_ShowBannerAdv,
+  Qi: _YaGamesPrivate_Adv_ShowFullscreenAdv,
+  Pi: _YaGamesPrivate_Adv_ShowRewardedVideo,
+  Oi: _YaGamesPrivate_Banner_Init,
+  Ni: _YaGamesPrivate_Clipboard_WriteText,
+  Mi: _YaGamesPrivate_DeviceInfo_IsDesktop,
+  Li: _YaGamesPrivate_DeviceInfo_IsMobile,
+  Ki: _YaGamesPrivate_DeviceInfo_IsTV,
+  Ji: _YaGamesPrivate_DeviceInfo_IsTablet,
+  Ii: _YaGamesPrivate_DeviceInfo_Type,
+  Hi: _YaGamesPrivate_Environment,
+  Gi: _YaGamesPrivate_Event_Dispatch,
+  Fi: _YaGamesPrivate_Event_On,
+  Ei: _YaGamesPrivate_Features_GameplayAPI_Start,
+  Di: _YaGamesPrivate_Features_GameplayAPI_Stop,
+  Ci: _YaGamesPrivate_Features_LoadingAPI_Ready,
+  Bi: _YaGamesPrivate_Feedback_CanReview,
+  Ai: _YaGamesPrivate_Feedback_RequestReview,
+  zi: _YaGamesPrivate_GetFlags,
+  yi: _YaGamesPrivate_GetLeaderboards,
+  xi: _YaGamesPrivate_GetPayments,
+  wi: _YaGamesPrivate_GetPlayer,
+  vi: _YaGamesPrivate_GetStorage,
+  ui: _YaGamesPrivate_IsAvailableMethod,
+  ti: _YaGamesPrivate_Leaderboards_GetDescription,
+  si: _YaGamesPrivate_Leaderboards_GetEntries,
+  ri: _YaGamesPrivate_Leaderboards_GetPlayerEntry,
+  qi: _YaGamesPrivate_Leaderboards_SetScore,
+  pi: _YaGamesPrivate_OpenAuthDialog,
+  oi: _YaGamesPrivate_Payments_ConsumePurchase,
+  ni: _YaGamesPrivate_Payments_GetCatalog,
+  mi: _YaGamesPrivate_Payments_GetPurchases,
+  li: _YaGamesPrivate_Payments_Purchase,
+  ki: _YaGamesPrivate_Player_GetData,
+  ji: _YaGamesPrivate_Player_GetID,
+  ii: _YaGamesPrivate_Player_GetIDsPerGame,
+  hi: _YaGamesPrivate_Player_GetMode,
+  gi: _YaGamesPrivate_Player_GetName,
+  fi: _YaGamesPrivate_Player_GetPayingStatus,
+  ei: _YaGamesPrivate_Player_GetPersonalInfo,
+  di: _YaGamesPrivate_Player_GetPhoto,
+  ci: _YaGamesPrivate_Player_GetSignature,
+  bi: _YaGamesPrivate_Player_GetStats,
+  ai: _YaGamesPrivate_Player_GetUniqueID,
+  $h: _YaGamesPrivate_Player_IncrementStats,
+  _h: _YaGamesPrivate_Player_SetData,
+  Zh: _YaGamesPrivate_Player_SetStats,
+  Yh: _YaGamesPrivate_RegisterCallbacks,
+  Xh: _YaGamesPrivate_RemoveCallbacks,
+  Wh: _YaGamesPrivate_Screen_Fullscreen_Exit,
+  Vh: _YaGamesPrivate_Screen_Fullscreen_Request,
+  Uh: _YaGamesPrivate_Screen_Fullscreen_Status,
+  Th: _YaGamesPrivate_ServerTime,
   Sh: _YaGamesPrivate_Shortcut_CanShowPrompt,
   Rh: _YaGamesPrivate_Shortcut_ShowPrompt,
   Qh: _YaGamesPrivate_Storage_Clear,
@@ -10254,7 +10282,7 @@ var wasmImports = {
   xa: __localtime_js,
   wa: __mktime_js,
   nh: __tzset_js,
-  E: _abort,
+  F: _abort,
   mh: _dmDeviceJSFreeBufferSlots,
   lh: _dmDeviceJSOpen,
   kh: _dmDeviceJSQueue,
@@ -10265,7 +10293,7 @@ var wasmImports = {
   fh: _dmSysGetUserPersistentDataRoot,
   eh: _dmSysGetUserPreferredLanguage,
   dh: _dmSysOpenURL,
-  O: _emscripten_asm_const_int,
+  E: _emscripten_asm_const_int,
   ch: _emscripten_cancel_main_loop,
   D: _emscripten_date_now,
   bh: _emscripten_get_heap_max,
@@ -10550,7 +10578,7 @@ var wasmImports = {
   th: _environ_get,
   sh: _environ_sizes_get,
   U: _exit,
-  F: _fd_close,
+  G: _fd_close,
   ra: _fd_read,
   za: _fd_seek,
   W: _fd_write,
@@ -10565,7 +10593,7 @@ var wasmImports = {
   Wb: _glBlendFunc,
   oa: _glBufferData,
   na: _glBufferSubData,
-  N: _glCheckFramebufferStatus,
+  O: _glCheckFramebufferStatus,
   Vb: _glClear,
   Ub: _glClearColor,
   Tb: _glClearDepthf,
@@ -10577,7 +10605,7 @@ var wasmImports = {
   l: _glCompressedTexSubImage2D,
   Qb: _glCompressedTexSubImage3D,
   la: _glCreateProgram,
-  M: _glCreateShader,
+  N: _glCreateShader,
   Pb: _glCullFace,
   ka: _glDeleteBuffers,
   Ob: _glDeleteFramebuffers,
@@ -10611,10 +10639,10 @@ var wasmImports = {
   ga: _glGetProgramInfoLog,
   r: _glGetProgramiv,
   fa: _glGetShaderInfoLog,
-  L: _glGetShaderiv,
+  M: _glGetShaderiv,
   y: _glGetString,
   vb: _glGetUniformLocation,
-  K: _glLinkProgram,
+  L: _glLinkProgram,
   ea: _glPixelStorei,
   ub: _glPolygonOffset,
   tb: _glReadPixels,
@@ -10629,7 +10657,7 @@ var wasmImports = {
   i: _glTexImage2D,
   mb: _glTexImage3D,
   lb: _glTexParameterf,
-  J: _glTexParameteri,
+  K: _glTexParameteri,
   j: _glTexSubImage2D,
   kb: _glTexSubImage3D,
   jb: _glUniform1i,
@@ -10648,7 +10676,7 @@ var wasmImports = {
   _a: _glfwGetJoystickButtons,
   Za: _glfwGetJoystickDeviceId,
   Ya: _glfwGetJoystickHats,
-  I: _glfwGetJoystickParam,
+  J: _glfwGetJoystickParam,
   Xa: _glfwGetJoystickPos,
   Wa: _glfwGetKey,
   h: _glfwGetMouseButton,
@@ -10675,7 +10703,7 @@ var wasmImports = {
   Ea: _glfwSetWindowIconifyCallback,
   Da: _glfwSetWindowSize,
   Ca: _glfwSetWindowSizeCallback,
-  H: _glfwShowKeyboard,
+  I: _glfwShowKeyboard,
   Ba: _glfwSwapBuffers,
   $: _glfwSwapInterval,
   Aa: _glfwTerminate,
@@ -10684,7 +10712,7 @@ var wasmImports = {
   P: invoke_iiii,
   va: invoke_ji,
   ua: invoke_jii,
-  G: invoke_vi,
+  H: invoke_vi,
   u: invoke_vii,
   _: invoke_viii,
   e: invoke_viiii,
@@ -10694,58 +10722,58 @@ var wasmImports = {
 };
 var wasmExports = createWasm();
 var _wasm_call_ctors = function ___wasm_call_ctors() {
-  return (_wasm_call_ctors = wasmExports["Ri"])();
+  return (_wasm_call_ctors = wasmExports["Ui"])();
 };
 var _dmExportedSymbols = Module["_dmExportedSymbols"] = function () {
-  return (_dmExportedSymbols = Module["_dmExportedSymbols"] = wasmExports["Si"])();
+  return (_dmExportedSymbols = Module["_dmExportedSymbols"] = wasmExports["Vi"])();
 };
 var _main = Module["_main"] = function (a0, a1) {
-  return (_main = Module["_main"] = wasmExports["Ti"])(a0, a1);
+  return (_main = Module["_main"] = wasmExports["Wi"])(a0, a1);
 };
 var _malloc = Module["_malloc"] = function (a0) {
-  return (_malloc = Module["_malloc"] = wasmExports["Ui"])(a0);
+  return (_malloc = Module["_malloc"] = wasmExports["Xi"])(a0);
 };
 var _free = Module["_free"] = function (a0) {
-  return (_free = Module["_free"] = wasmExports["Vi"])(a0);
+  return (_free = Module["_free"] = wasmExports["Yi"])(a0);
 };
 var _htonl2 = function _htonl(a0) {
-  return (_htonl2 = wasmExports["Xi"])(a0);
+  return (_htonl2 = wasmExports["_i"])(a0);
 };
 var _dmScript_Html5ReportOperationSuccess = Module["_dmScript_Html5ReportOperationSuccess"] = function (a0) {
-  return (_dmScript_Html5ReportOperationSuccess = Module["_dmScript_Html5ReportOperationSuccess"] = wasmExports["Yi"])(a0);
+  return (_dmScript_Html5ReportOperationSuccess = Module["_dmScript_Html5ReportOperationSuccess"] = wasmExports["$i"])(a0);
 };
 var _dmScript_RunInteractionCallback = Module["_dmScript_RunInteractionCallback"] = function () {
-  return (_dmScript_RunInteractionCallback = Module["_dmScript_RunInteractionCallback"] = wasmExports["Zi"])();
+  return (_dmScript_RunInteractionCallback = Module["_dmScript_RunInteractionCallback"] = wasmExports["aj"])();
 };
 var _setTempRet = function setTempRet0(a0) {
-  return (_setTempRet = wasmExports["_i"])(a0);
+  return (_setTempRet = wasmExports["bj"])(a0);
 };
 var _htons2 = function _htons(a0) {
-  return (_htons2 = wasmExports["$i"])(a0);
+  return (_htons2 = wasmExports["cj"])(a0);
 };
 var _ntohs2 = function _ntohs(a0) {
-  return (_ntohs2 = wasmExports["aj"])(a0);
+  return (_ntohs2 = wasmExports["dj"])(a0);
 };
 var _JSWriteDump = Module["_JSWriteDump"] = function (a0) {
-  return (_JSWriteDump = Module["_JSWriteDump"] = wasmExports["bj"])(a0);
+  return (_JSWriteDump = Module["_JSWriteDump"] = wasmExports["ej"])(a0);
 };
 var _setThrew2 = function _setThrew(a0, a1) {
-  return (_setThrew2 = wasmExports["cj"])(a0, a1);
+  return (_setThrew2 = wasmExports["fj"])(a0, a1);
 };
 var _stackSave = function stackSave() {
-  return (_stackSave = wasmExports["dj"])();
+  return (_stackSave = wasmExports["gj"])();
 };
 var _stackRestore = function stackRestore(a0) {
-  return (_stackRestore = wasmExports["ej"])(a0);
+  return (_stackRestore = wasmExports["hj"])(a0);
 };
 var _stackAlloc = function stackAlloc(a0) {
-  return (_stackAlloc = wasmExports["fj"])(a0);
+  return (_stackAlloc = wasmExports["ij"])(a0);
 };
 var dynCall_jii = Module["dynCall_jii"] = function (a0, a1, a2) {
-  return (dynCall_jii = Module["dynCall_jii"] = wasmExports["gj"])(a0, a1, a2);
+  return (dynCall_jii = Module["dynCall_jii"] = wasmExports["jj"])(a0, a1, a2);
 };
 var dynCall_ji = Module["dynCall_ji"] = function (a0, a1) {
-  return (dynCall_ji = Module["dynCall_ji"] = wasmExports["hj"])(a0, a1);
+  return (dynCall_ji = Module["dynCall_ji"] = wasmExports["kj"])(a0, a1);
 };
 function invoke_vii(index, a1, a2) {
   var sp = _stackSave();
