@@ -1,104 +1,80 @@
 images {
   image: "/assets/ball.png"
-  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
 }
 images {
   image: "/assets/wall-c.png"
-  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
 }
 images {
   image: "/assets/wall-l.png"
-  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
 }
 images {
   image: "/assets/wall-r.png"
-  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
 }
 images {
   image: "/assets/up-arrow.png"
-  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
 }
 images {
   image: "/assets/down-arrow.png"
-  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
 }
 images {
   image: "/assets/spikes.png"
-  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
 }
 images {
   image: "/assets/coin-dummy.png"
-  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
 }
 images {
   image: "/assets/boost-arrow-diag.png"
-  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
 }
 images {
   image: "/assets/boost-arrow-left.png"
-  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
 }
 animations {
   id: "coin"
   images {
     image: "/assets/coin-1.png"
-    sprite_trim_mode: SPRITE_TRIM_MODE_OFF
   }
   images {
     image: "/assets/coin-3.png"
-    sprite_trim_mode: SPRITE_TRIM_MODE_OFF
   }
   images {
     image: "/assets/coin-2.png"
-    sprite_trim_mode: SPRITE_TRIM_MODE_OFF
   }
   images {
     image: "/assets/coin4.png"
-    sprite_trim_mode: SPRITE_TRIM_MODE_OFF
   }
   playback: PLAYBACK_LOOP_FORWARD
   fps: 5
-  flip_horizontal: 0
-  flip_vertical: 0
 }
 animations {
   id: "boost-n"
   images {
     image: "/assets/boost-arrow-down.png"
-    sprite_trim_mode: SPRITE_TRIM_MODE_OFF
   }
   playback: PLAYBACK_NONE
   fps: 0
-  flip_horizontal: 0
   flip_vertical: 1
 }
 animations {
   id: "boost-s"
   images {
     image: "/assets/boost-arrow-down.png"
-    sprite_trim_mode: SPRITE_TRIM_MODE_OFF
   }
   playback: PLAYBACK_NONE
   fps: 0
-  flip_horizontal: 0
-  flip_vertical: 0
 }
 animations {
   id: "boost-ne"
   images {
     image: "/assets/boost-arrow-diag.png"
-    sprite_trim_mode: SPRITE_TRIM_MODE_OFF
   }
   playback: PLAYBACK_NONE
   fps: 0
   flip_horizontal: 1
-  flip_vertical: 0
 }
 animations {
   id: "boost-se"
   images {
     image: "/assets/boost-arrow-diag.png"
-    sprite_trim_mode: SPRITE_TRIM_MODE_OFF
   }
   playback: PLAYBACK_NONE
   fps: 0
@@ -109,46 +85,35 @@ animations {
   id: "boost-sw"
   images {
     image: "/assets/boost-arrow-diag.png"
-    sprite_trim_mode: SPRITE_TRIM_MODE_OFF
   }
   playback: PLAYBACK_NONE
   fps: 0
-  flip_horizontal: 0
   flip_vertical: 1
 }
 animations {
   id: "boost-nw"
   images {
     image: "/assets/boost-arrow-diag.png"
-    sprite_trim_mode: SPRITE_TRIM_MODE_OFF
   }
   playback: PLAYBACK_NONE
   fps: 0
-  flip_horizontal: 0
-  flip_vertical: 0
 }
 animations {
   id: "boost-e"
   images {
     image: "/assets/boost-arrow-left.png"
-    sprite_trim_mode: SPRITE_TRIM_MODE_OFF
   }
   playback: PLAYBACK_NONE
   fps: 0
   flip_horizontal: 1
-  flip_vertical: 0
 }
 animations {
   id: "boost-w"
   images {
     image: "/assets/boost-arrow-left.png"
-    sprite_trim_mode: SPRITE_TRIM_MODE_OFF
   }
   playback: PLAYBACK_NONE
   fps: 0
-  flip_horizontal: 0
-  flip_vertical: 0
 }
 margin: 2
 extrude_borders: 2
-inner_padding: 0
