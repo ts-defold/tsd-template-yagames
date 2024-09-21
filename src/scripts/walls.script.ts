@@ -23,7 +23,7 @@ interface props {
 	coins: hash[];
 	active_stacks: Record<string, hash>[];
 	dead_walls: Record<string, hash>[];
-	triggered_walls: Set<url>;
+	triggered_walls: Set<hash>;
 	wall_delay: number;
 	walls_spawned: number;
 	delay: number;
