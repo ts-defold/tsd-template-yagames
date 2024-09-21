@@ -16,7 +16,7 @@ input_method = HiddenInputField
 title = tsd-template-yagames
 developer = https://github.com/ts-defold/tsd-template-yagames
 dependencies#0 = https://github.com/ts-defold/defold-lldebugger/archive/extension.zip
-dependencies#1 = https://github.com/indiesoftby/defold-yagames/archive/refs/heads/master.zip
+dependencies#1 = https://github.com/indiesoftby/defold-yagames/archive/refs/tags/0.14.0.zip
 
 [render]
 clear_color_red = 0.79
@@ -33,3 +33,5 @@ show_fullscreen_button = 0
 [sprite]
 max_count = 256
 
+[yagames]
+sdk_url = https://yandex.ru/games/sdk/v2
