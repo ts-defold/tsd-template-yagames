@@ -6,7 +6,7 @@ lldebugger.start();
 
 interface props {
 	next?: string;
-	loaded?: url;
+	loaded?: hash;
 	params?: {
 		target?: string;
 		id?: string;
