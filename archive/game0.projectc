@@ -207,3 +207,6 @@ run_while_iconified = 0
 fixed_update_frequency = 60
 max_time_step = 0.5
 
+[yagames]
+sdk_url = https://yandex.ru/games/sdk/v2
+
