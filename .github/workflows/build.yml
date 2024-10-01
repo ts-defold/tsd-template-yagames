@@ -34,7 +34,7 @@ jobs:
         run: 'java -jar $BOB --root ./app --archive --platform js-web --bundle-output ./bundle --verbose resolve distclean build bundle'
 
       - name: Deploy
-        uses: JamesIves/github-pages-deploy-action@4.1.5
+        uses: JamesIves/github-pages-deploy-action@v4.6.8
         with:
           branch: gh-pages
           folder: bundle/tsd-template-yagames
