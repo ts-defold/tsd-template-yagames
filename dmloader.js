@@ -28,6 +28,20 @@
 *
 *     'resize_window_callback':
 *         Function that is called when resize/orientationchanges/focus events happened
+*
+*     'start_success':
+*         Function that is called just before main is called upon successful load.
+*
+*     'start_error':
+*         Function that is called if startup fails for any reason.
+*
+*     'update_progress':
+*         Function that is called as progress is updated. Parameter progress is updated 0-100.
+*
+*     'update_imports':
+*         Function that is called right before wasm instantiation. Imports
+*         are passed into the function and can be modified and will be
+*         subsequently passed on to WebAssembly.
 */
 var CUSTOM_PARAMETERS = {
     archive_location_filter: function( path ) {
@@ -42,6 +56,14 @@ var CUSTOM_PARAMETERS = {
     unsupported_webgl_callback: function() {
         var e = document.getElementById("webgl-not-supported");
         e.style.display = "block";
+    },
+    start_success: function() {
+    },
+    start_error: function(error) {
+    },
+    update_progress: function(progress) {
+    },
+    update_imports: function(imports) {
     },
     resize_window_callback: function() {
         var is_iOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
@@ -195,11 +217,11 @@ var FileLoader = {
 var EngineLoader = {
     
     
-    wasm_size: 2435312,
+    wasm_size: 2528431,
     
-    wasmjs_size: 287650,
+    wasmjs_size: 287835,
     
-    asmjs_size: 5111808,
+    asmjs_size: 5256902,
     wasm_instantiate_progress: 0,
 
     stream_wasm: "false" === "true",
@@ -211,7 +233,7 @@ var EngineLoader = {
     // load and instantiate .wasm file using XMLHttpRequest
     loadAndInstantiateWasmAsync: function(src, imports, successCallback) {
         FileLoader.load(src, "arraybuffer",
-            function(delta) { 
+            function(delta) {
                 ProgressUpdater.updateCurrent(delta);
             },
             function(error) { throw error; },
@@ -223,13 +245,21 @@ var EngineLoader = {
                     const digest = await window.crypto.subtle.digest("SHA-1", wasm);
                     const sha1 = Array.from(new Uint8Array(digest)).map(b => b.toString(16).padStart(2, '0')).join('');
                     if (sha1 != EngineLoader.wasm_sha1) {
-                        console.warn("Unexpected wasm sha1: " + sha1 + ", expected: " + EngineLoader.wasm_sha1);
+                        const error = new Error("Unexpected wasm sha1: " + sha1 + ", expected: " + EngineLoader.wasm_sha1);
+                        if (typeof CUSTOM_PARAMETERS["start_error"] === "function") {
+                           CUSTOM_PARAMETERS["start_error"](error);
+                        }
+                        throw error;
                     }
                 }
                 var wasmInstantiate = WebAssembly.instantiate(new Uint8Array(wasm), imports).then(function(output) {
+                    Module.instance = output.instance;
                     successCallback(output.instance);
                 }).catch(function(e) {
                     console.log('wasm instantiation failed! ' + e);
+                    if (typeof CUSTOM_PARAMETERS["start_error"] === "function") {
+                        CUSTOM_PARAMETERS["start_error"](e);
+                    }
                     throw e;
                 });
             },
@@ -263,11 +293,20 @@ var EngineLoader = {
 
         WebAssembly.instantiateStreaming(fetchFn(src), imports).then(function(output) {
             ProgressUpdater.updateCurrent(EngineLoader.wasm_instantiate_progress);
+            Module.instance = output.instance;
             successCallback(output.instance);
         }).catch(function(e) {
             console.log('wasm streaming instantiation failed! ' + e);
             console.log('Fallback to wasm loading');
-            EngineLoader.loadAndInstantiateWasmAsync(src, imports, successCallback);
+            try {
+                EngineLoader.loadAndInstantiateWasmAsync(src, imports, successCallback);
+            } catch (error) {
+                 if (typeof CUSTOM_PARAMETERS["start_error"] === "function") {
+                    CUSTOM_PARAMETERS["start_error"](error);
+                 } else {
+                    throw error;
+                 }
+            }
         });
     },
 
@@ -275,6 +314,10 @@ var EngineLoader = {
     // https://github.com/emscripten-core/emscripten/blob/main/test/manual_wasm_instantiate.html
     loadWasmAsync: function(exeName) {
         Module.instantiateWasm = function(imports, successCallback) {
+            if (typeof CUSTOM_PARAMETERS["update_imports"] === "function") {
+                var callback = CUSTOM_PARAMETERS["update_imports"];
+                callback(imports);
+            }
             if (EngineLoader.stream_wasm && (typeof WebAssembly.instantiateStreaming === "function")) {
                 EngineLoader.streamAndInstantiateWasmAsync(exeName + ".wasm", imports, successCallback);
             }
@@ -305,10 +348,15 @@ var EngineLoader = {
                     const digest = await window.crypto.subtle.digest("SHA-1", new TextEncoder().encode(response));
                     const sha1 = Array.from(new Uint8Array(digest)).map(b => b.toString(16).padStart(2, '0')).join('');
                     if (sha1 != expectedSHA1) {
-                        throw new Error("Unexpected sha1: " + sha1 + ", expected: " + expectedSHA1);
+                        const error = new Error("Unexpected sha1: " + sha1 + ", expected: " + expectedSHA1);
+                        if (typeof CUSTOM_PARAMETERS["start_error"] === "function") {
+                            CUSTOM_PARAMETERS["start_error"](error);
+                        } else {
+                             throw error;
+                        }
                     }
                 }
-                var tag = document.createElement("script");
+           var tag = document.createElement("script");
                 tag.text = response;
                 document.body.appendChild(tag);
             },
@@ -321,15 +369,23 @@ var EngineLoader = {
     // start loading archive_files.json
     // after receiving it - start loading engine and data concurrently
     load: function(appCanvasId, exeName) {
+        if (typeof CUSTOM_PARAMETERS["update_progress"] === "function") {
+            ProgressUpdater.addListener(CUSTOM_PARAMETERS["update_progress"]);
+        }
+
         ProgressView.addProgress(Module.setupCanvas(appCanvasId));
         CUSTOM_PARAMETERS['exe_name'] = exeName;
 
         FileLoader.options.retryCount = CUSTOM_PARAMETERS["retry_count"];
         FileLoader.options.retryInterval = CUSTOM_PARAMETERS["retry_time"] * 1000;
-        if (typeof CUSTOM_PARAMETERS["can_not_download_file_callback"] === "function") {
-            GameArchiveLoader.addFileDownloadErrorListener(CUSTOM_PARAMETERS["can_not_download_file_callback"]);
-        }
         // Load and assemble archive
+        GameArchiveLoader.addFileDownloadErrorListener((error) => {
+           if (typeof CUSTOM_PARAMETERS["can_not_download_file_callback"] === "function") {
+               CUSTOM_PARAMETERS["can_not_download_file_callback"](error);
+           } else if (typeof CUSTOM_PARAMETERS["start_error"] === "function") {
+               CUSTOM_PARAMETERS["start_error"](error);
+           }
+        });
         GameArchiveLoader.addFileLoadedListener(Module.onArchiveFileLoaded);
         GameArchiveLoader.addArchiveLoadedListener(Module.onArchiveLoaded);
         GameArchiveLoader.setFileLocationFilter(CUSTOM_PARAMETERS["archive_location_filter"]);
@@ -343,7 +399,7 @@ var EngineLoader = {
             window.addEventListener('resize', callback, false);
             window.addEventListener('orientationchange', callback, false);
             window.addEventListener('focus', callback, false);
-        }        
+        }
     }
 };
 
@@ -641,12 +697,13 @@ var GameArchiveLoader = {
                     data = FS.mmap(file.stream, file.size, 0, 0x01, 0x01); //PROT_READ, MAP_SHARED
                 } catch(e) { }
             }
-            return window.crypto.subtle.digest("SHA-1", data).then((digest) => {
-                const sha1 = Array.from(new Uint8Array(digest)).map(b => b.toString(16).padStart(2, '0')).join('');
-                if (sha1 !== file.sha1)
-                    return Promise.reject(new Error(`Unexpected hash ${sha1} wanted ${file.sha1}`));
-                return;
-            });
+            if(data) {
+                return window.crypto.subtle.digest("SHA-1", data).then((digest) => {
+                    const sha1 = Array.from(new Uint8Array(digest)).map(b => b.toString(16).padStart(2, '0')).join('');
+                    if (sha1 !== file.sha1)
+                        return Promise.reject(new Error(`Unexpected hash ${sha1} wanted ${file.sha1}`));
+                });
+            }
         }
         return Promise.resolve();
     },
@@ -782,6 +839,8 @@ var Progress = {
 /* ********************************************************************* */
 
 var Module = {
+    engineVersion: "1.10.1",
+    engineSdkSha1: "d8e6e73a8efac6b9a72783027867e547b6a363e4",
     noInitialRun: true,
 
     _filesToPreload: [],
@@ -1108,6 +1167,9 @@ var Module = {
         if (!Module._isMainCalled) {
             Module._isMainCalled = true;
             ProgressView.removeProgress();
+            if (typeof CUSTOM_PARAMETERS["start_success"] === "function") {
+                CUSTOM_PARAMETERS["start_success"]();
+            }
             if (Module.callMain === undefined) {
                 Module.noInitialRun = false;
             } else {
@@ -1167,6 +1229,9 @@ Module["locateFile"] = function(path, scriptDirectory)
 
 
 window.addEventListener("error", (errorEvent) => {
+    if (typeof CUSTOM_PARAMETERS["start_error"] === "function") {
+        CUSTOM_PARAMETERS["start_error"](errorEvent);
+    }
     Module.setStatus('Exception thrown, see JavaScript console');
     Module.setStatus = function(text) {
         if (text) Module.printErr('[post-exception status] ' + text);
