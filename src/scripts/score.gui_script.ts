@@ -22,7 +22,7 @@ interface props {
 		'cursor-1': { 'up-1': node; 'down-1': node; [key: string]: node };
 		'cursor-2': { 'up-2': node; 'down-2': node; [key: string]: node };
 		'cursor-3': { 'up-3': node; 'down-3': node; [key: string]: node };
-		[key: string]: node;
+		[key: string]: node | { [key: string]: node };
 	};
 }
 
@@ -147,7 +147,7 @@ export function on_input(this: props, action_id: hash, action: Action): void {
 
 	// Update current letter
 	gui.set_text(
-		this.nodes[`letter-${this.initials_index + 1}`],
+		this.nodes[`letter-${this.initials_index + 1}`] as node,
 		this.letters[this.letters_index],
 	);
 
