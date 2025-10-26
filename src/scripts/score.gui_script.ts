@@ -76,7 +76,7 @@ export function update(this: props): void {
 		this.submit = 'submitting';
 
 		//! HTML5 Only
-		const info = sys.get_sys_info() as { system_name: string };
+		const info = sys.get_sys_info();
 		if (info.system_name !== 'HTML5') {
 			offlineScores.set_score(this.score, this.initials.join(''));
 			msg.post('main:/main#script', 'show_fullscreen_adv', {

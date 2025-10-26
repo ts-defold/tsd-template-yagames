@@ -6,7 +6,7 @@ lldebugger.start();
 
 interface props {
 	next?: string;
-	loaded?: hash;
+	loaded?: hash | url;
 	params?: {
 		target?: string;
 		id?: string;
@@ -170,7 +170,7 @@ export function on_message(
 				this.params.id,
 				this.params.params,
 			);
-			msg.post(this.params.target, this.params.id, this.params.params);
+			msg.post(this.params.target, this.params.id, this.params.params as object);
 			this.params = undefined;
 		}
 	}

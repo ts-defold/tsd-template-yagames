@@ -96,7 +96,7 @@ export function update(this: props, dt: number): void {
 	this.dir.x = left ? -1 : right ? 1 : 0;
 	this.dir.y = down ? -1 : up ? 1 : 0;
 	this.dir =
-		this.dir.x === 0 && this.dir.y === 0 ? this.dir : vmath.normalize(this.dir);
+		this.dir.x === 0 && this.dir.y === 0 ? this.dir : vmath.normalize(this.dir) as vmath.vector3;
 
 	// Handle boost states
 	if (this.boost === 'ready' && action) {

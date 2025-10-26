@@ -50,7 +50,7 @@ export function on_input(this: props, action_id: hash, action: Action): void {
 
 export function on_message(
 	this: props,
-	message_id: string,
+	message_id: hash,
 	message: unknown,
 ): void {
 	// Virtual Input

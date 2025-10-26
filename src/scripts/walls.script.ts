@@ -21,9 +21,9 @@ interface props {
 	speed: number;
 	walls: hash[];
 	coins: hash[];
-	active_stacks: Record<string, hash>[];
-	dead_walls: Record<string, hash>[];
-	triggered_walls: Set<hash>;
+	active_stacks: LuaMap<hash, hash>[];
+	dead_walls: hash[];
+	triggered_walls: LuaSet<hash>;
 	wall_delay: number;
 	walls_spawned: number;
 	delay: number;
@@ -45,7 +45,7 @@ const START = vmath.vector3(0, 320 - 8, 0);
 export function init(this: props): void {
 	this.active_stacks = [];
 	this.dead_walls = [];
-	this.triggered_walls = new Set();
+	this.triggered_walls = new LuaSet();
 	this.wall_delay = 0;
 	this.walls_spawned = 1;
 
@@ -111,7 +111,7 @@ export function update(this: props, dt: number): void {
 	// Update stacks
 	for (let i = 0; i < this.active_stacks.length; i++) {
 		const stack = this.active_stacks[i];
-		const wall = stack[hash('/wall') as string];
+		const wall = stack.get(hash('/wall'));
 		const pos = go.get_position(wall);
 		pos.y -= this.speed * dt;
 		if (pos.y < -640 - 16) {
@@ -147,18 +147,17 @@ function update_progression(this: props, _elapsed: number): void {
 	}
 }
 
-function spawn(id: number, coins: number[] = []): hash {
-	const collection = collectionfactory.create(`/walls#stack-${id}`) as Record<
-		string,
-		hash
-	>;
-	const wall = collection[hash('/wall') as string]; // TODO: types hack
+function spawn(id: number, coins: number[] = []) {
+	const collection = collectionfactory.create(`/walls#stack-${id}`);;
+	const wall = collection.get(hash('/wall'));
 	go.set_position(START, wall);
 	[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
 		.filter((i) => !coins.includes(i))
 		.forEach((i) => {
-			const coin = collection[hash(`/coin-${i}`) as string];
-			msg.post(coin, 'disable');
+			const coin = collection.get(hash(`/coin-${i}`));
+			if (coin) {
+				msg.post(coin, 'disable');
+			}
 		});
 
 	return collection;
@@ -166,14 +165,16 @@ function spawn(id: number, coins: number[] = []): hash {
 
 function destroy(
 	this: props,
-	stack: Record<string, hash>,
+	stack: LuaMap<hash, hash>,
 	index: number,
 ): void {
-	const wall = stack[hash('/wall') as string];
+	const wall = stack.get(hash('/wall'));
 	this.active_stacks.splice(index, 1);
-	this.dead_walls.push(wall);
+	if (wall) {
+		this.dead_walls.push(wall);
+	}
 	Object.keys(stack).forEach((key) => {
-		go.delete(stack[key]);
+		go.delete(stack.get(key));
 	});
 }
 
