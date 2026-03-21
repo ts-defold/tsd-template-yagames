@@ -65,28 +65,29 @@ var CUSTOM_PARAMETERS = {
     },
     update_imports: function(imports) {
     },
+    resize_window_prev_inner_width: -1,
+    resize_window_prev_inner_height: -1,
     resize_window_callback: function() {
         var is_iOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
         var buttonHeight = 0;
-        var prevInnerWidth = -1;
-        var prevInnerHeight = -1;
         
         
         // Hack for iOS when exit from Fullscreen mode
         if (is_iOS) {
             window.scrollTo(0, 0);
         }
-    
+
         var app_container = document.getElementById('app-container');
         var game_canvas = document.getElementById('canvas');
         var innerWidth = window.innerWidth;
         var innerHeight = window.innerHeight - buttonHeight;
-        if (prevInnerWidth == innerWidth && prevInnerHeight == innerHeight)
+        if (CUSTOM_PARAMETERS.resize_window_prev_inner_width == innerWidth &&
+            CUSTOM_PARAMETERS.resize_window_prev_inner_height == innerHeight)
         {
             return;
         }
-        prevInnerWidth = innerWidth;
-        prevInnerHeight = innerHeight;
+        CUSTOM_PARAMETERS.resize_window_prev_inner_width = innerWidth;
+        CUSTOM_PARAMETERS.resize_window_prev_inner_height = innerHeight;
         var width = 320;
         var height = 288;
         var targetRatio = width / height;
@@ -217,15 +218,15 @@ var FileLoader = {
 var EngineLoader = {
     arc_sha1: "",
     wasm_sha1: "",
-    wasm_size: 2582898,
+    wasm_size: 2603747,
     wasmjs_sha1: "",
-    wasmjs_size: 297425,
+    wasmjs_size: 297638,
     wasm_pthread_sha1: "",
-    wasm_pthread_size: 2599750,
+    wasm_pthread_size: 2618197,
     wasmjs_pthread_sha1: "",
     wasmjs_pthread_size: 284103,
     asmjs_sha1: "",
-    asmjs_size: 5351768,
+    asmjs_size: 5385850,
     wasm_instantiate_progress: 0,
 
     stream_wasm: "false" === "true",
@@ -889,8 +890,8 @@ var Progress = {
 /* ********************************************************************* */
 
 var Module = {
-    engineVersion: "1.12.0",
-    engineSdkSha1: "3206f699aaff89f357c9d549050b8453e080c5d2",
+    engineVersion: "1.12.2",
+    engineSdkSha1: "e43be333aa7a4fc319ab62adc8d405c8e98bf92f",
     noInitialRun: true,
 
     _filesToPreload: [],
